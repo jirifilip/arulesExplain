@@ -1,0 +1,2 @@
+"","priority","Explanation (RiskPerformance=Good)","Confidence","Support (rel)","Support (abs)","Lift"
+"38",38,"ExternalRiskEstimate is between 82 (incl) to Inf (incl) THEN RiskPerformance is Good",0.814766824245453,0.160377353429794,1677,1.70432924295664
