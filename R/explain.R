@@ -109,7 +109,7 @@ explainQCBA <- function (rulesText, rules, allData, defaultRuleList, intervalRea
       # trim the curly braces
       antecedentStringTrimmed <- substr(antecedentString, 2, nchar(antecedentString) - 1)
       # split into individual items
-      antecedentStringSplit <- strsplit(antecedentStringTrimmed, ",")
+      antecedentStringSplit <- unlist(strsplit(antecedentStringTrimmed, ","))
       # parse the items into vectors
       antecedentItemsParsed <- sapply(antecedentStringSplit, function (x) {
         parseItem(x, intervalReader)
@@ -171,11 +171,23 @@ getExplanationsDataframe <- function(rmqCBA, firingRulesID, allData, includeJust
     return(explanationDataframeWithoutJustifications)
   }
 
+  explanationDataframe[["predicted class"]] <- sapply(explanationDataframe$explanation, function (x) {
+    clazzSplit <- unlist(strsplit(x, " "))
+    clazz <- clazzSplit[length(clazzSplit)]
+
+
+    if (grepl("=", clazz)) {
+      clazz <- unlist(strsplit(x, "="))[2]
+    }
+
+    clazz
+  })
+
   explanationDataframe
 }
 
-getClassExplanationsDataframe <- function(rmqCBA, allData) {
-  explanationDataframe <- getExplanationsDataframe(rmqCBA, 1:(nrow(rmqCBA@rules) - 1), allData)
+getClassExplanationsDataframe <- function(rmqCBA, allData, intervalReader) {
+  explanationDataframe <- getExplanationsDataframe(rmqCBA, 1:(nrow(rmqCBA@rules) - 1), allData, includeJustifications = TRUE, intervalReader)
 
   classAtt <- rmqCBA@classAtt
   classNames <- names(table(allData[classAtt]))
@@ -227,7 +239,7 @@ getClassExplanationsDataframe <- function(rmqCBA, allData) {
 
     maskExplanations$class_val <- NULL
 
-    colnames(maskExplanations)[2] <- paste("Explanation (", classAtt, "=", className, sep = "")
+    colnames(maskExplanations)[2] <- paste("Explanation (", classAtt, "=", className, ")", sep = "")
 
     resultList[[className]] <- maskExplanations
   }

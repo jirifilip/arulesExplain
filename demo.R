@@ -50,5 +50,13 @@ ir <- new("intervalReader",
           rightOpenBracket = ")",
           bracketLen = 0)
 
-explanation_dataframe <- getExplanationsDataframe(rmqCBA, firingRuleIDs, train, includeJustifications = FALSE, ir)
+explanation_dataframe <- getExplanationsDataframe(rmqCBA, firingRuleIDs, train, includeJustifications = TRUE, ir)
 View(explanation_dataframe)
+
+
+explanation_dataframe <- getClassExplanationsDataframe(rmqCBA, data, ir)
+View(explanation_dataframe[["benign"]])
+
+
+
+
