@@ -1,7 +1,0 @@
-"Priority","Explanation (RiskPerformance=Good)","Confidence","Support (rel)","Support (abs)","Lift"
-1,"If MSinceMostRecentInqexcl7days is between -8.5 to -7.5 (incl) ",0.829831932773109,0.0377665168754183,395,1.73584243697479
-7,"If ExternalRiskEstimate is greater than 81.5 ",0.81021897810219,0.159193039487523,1665,1.69481605839416
-18,"If PercentTradesWBalance is between 2 to 44.5 (incl) ",0.694492753623188,0.114542499282914,1198,1.45273994202899
-21,"If ExternalRiskEstimate is between 74.5 to 81.5 (incl) ",0.646700507614213,0.121808968352615,1274,1.35276812182741
-26,"If MSinceOldestTradeOpen is greater than 263.5 ",0.617712505562973,0.132708671957166,1388,1.29213101913663
-31,"If PercentTradesWBalance is between 44.5 to 60.5 (incl) ",0.571101966163695,0.119418682474424,1249,1.19463109282122

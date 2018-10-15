@@ -1,6 +1,6 @@
 library(qCBA)
 library(stringr)
-data <- read.csv("data/heloc_dataset_v1.csv")
+data <- read.csv("data/lymph0.csv")
 
 
 smp_size <- floor(1 * nrow(data))
@@ -9,12 +9,25 @@ train_ind <- sample(seq_len(nrow(data)), size = smp_size)
 train <- data[train_ind, ]
 test <- data[train_ind, ]
 
-rmCBA <- cba(train, classAtt="RiskPerformance", rulelearning_options = list(target_rule_count=50,find_conf_supp_thresholds=TRUE))
+rmCBA <- cba(train, classAtt="class")
 
 
 rmqCBA <- qcba(cbaRuleModel=rmCBA,datadf=train)
 
 
+# conversion to arules data structure - itemMatrix
 itemMatrixRules <- as.item.matrix(rmqCBA, train)
 
+# conversion to qcba data structure
+qcbaRules <- as.qcba.rules(itemMatrixRules)
+
+# overwrite the object slot with new rules
+rmqCBA@rules <- qcbaRules
+
+# convert back to arules itemMatrix
+itemMatrixRules2 <- as.item.matrix(rmqCBA, train)
+
+
 inspect(itemMatrixRules)
+inspect(itemMatrixRules2)
+qcbaRules
