@@ -158,11 +158,11 @@ explainQCBA <- function (rulesText, rules, allData, defaultRuleList, intervalRea
 }
 
 
-getExplanationsDataframe <- function(rmqCBA, firingRulesID, allData, includeJustifications = TRUE, intervalReader = new("intervalReader")) {
-  firingRules <- rmqCBA@rules[firingRulesID,]
+getExplanationsDataframe <- function(rules, firingRulesID, allData, includeJustifications = TRUE, intervalReader = new("intervalReader")) {
+  firingRules <- rules[firingRulesID,]
   firingRulesText <- firingRules[,1]
 
-  explanationDataframe <- explainQCBA(firingRulesText, firingRules, allData, rmqCBA@rules, intervalReader)
+  explanationDataframe <- explainQCBA(firingRulesText, firingRules, allData, rules, intervalReader)
 
   if (!includeJustifications) {
     explanationDataframeWithoutJustifications <- explanationDataframe
@@ -183,18 +183,37 @@ getExplanationsDataframe <- function(rmqCBA, firingRulesID, allData, includeJust
     clazz
   })
 
+  textVector <- c()
+  for (i in firingRulesID) {
+    text <- getQCBAConflictingRuleText(rules, i, allData)
+
+    textVector <- c(textVector, text)
+  }
+  explanationDataframe[["strongest rule supporting alternative class"]] <- textVector
+
   explanationDataframe
 }
 
-getClassExplanationsDataframe <- function(rmqCBA, allData, intervalReader) {
-  explanationDataframe <- getExplanationsDataframe(rmqCBA, 1:(nrow(rmqCBA@rules) - 1), allData, includeJustifications = TRUE, intervalReader)
+getClassExplanationsDataframe <- function(rm, allData, intervalReader) {
+  rules <- rm@rules
 
-  classAtt <- rmqCBA@classAtt
+  if (class(rules) != "data.frame") {
+    if (class(rules) != "rules") {
+      stop("class of rules must be data.frame or rules")
+    }
+
+    rules <- as.qcba.rules(rules)
+  }
+
+
+  explanationDataframe <- getExplanationsDataframe(rules, 1:(nrow(rules) - 1), allData, includeJustifications = TRUE, intervalReader)
+
+  classAtt <- rm@classAtt
   classNames <- names(table(allData[classAtt]))
 
 
-  classExplRulesLength <- nrow(rmqCBA@rules)
-  classExplRules <- rmqCBA@rules[-classExplRulesLength,]
+  classExplRulesLength <- nrow(rules)
+  classExplRules <- rules[-classExplRulesLength,]
   classExplRulesText <- classExplRules[-classExplRulesLength,1]
 
   # class explanations
@@ -247,13 +266,13 @@ getClassExplanationsDataframe <- function(rmqCBA, allData, intervalReader) {
   resultList
 }
 
-getQCBAConflictingRuleText <- function(rm, ruleIndex, data) {
-  if (ruleIndex == nrow(rm@rules)) {
+getQCBAConflictingRuleText <- function(rules, ruleIndex, data) {
+  if (ruleIndex == nrow(rules)) {
     return("No specific conflicting rule found.")
   }
 
 
-  matchesText <- rm@rules
+  matchesText <- rules
   matchesTextRule <- matchesText[,1]
   matchesTextRuleSplit <- strsplit(matchesTextRule, " => ")
 
@@ -266,6 +285,11 @@ getQCBAConflictingRuleText <- function(rm, ruleIndex, data) {
 
     if (currentClass != ruleClass) {
       conflictIndex <- i
+
+      if (i == nrow(rules)) {
+        return("No specific conflicting rule found.")
+      }
+
       break()
     }
     if (i == length(matchesTextRuleSplit)) {
@@ -336,4 +360,48 @@ getQCBAConflictingRuleText <- function(rm, ruleIndex, data) {
 
   text
 }
+
+
+
+
+
+
+
+
+
+explainPrediction.CBARuleModel  <- function (object, data, discretize = TRUE, ...) {
+  if (discretize && length(object@cutp)>0) {
+    data <- applyCuts(data, object@cutp, infinite_bounds=TRUE, labels=TRUE)
+  }
+  test_txns <- as(data, "transactions")
+
+  t <- unname(is.subset(object@rules@lhs, test_txns))
+
+  matches <- suppressWarnings(apply(t, 2, function(x) min(which(x==TRUE))))
+
+  # check if all instances are classified
+  first_unclassified_instance <- match(Inf,matches)
+  if (!is.na(first_unclassified_instance))
+  {
+    # the is.subset function does not mark default (with empty lhs) rule as applicable for all instances,
+    # we need to do this manually.
+
+    first_rules_with_empty_lhs <- min(which(apply(object@rules@lhs@data, 2, function(x) sum(x))==0))
+    if (!is.na(first_rules_with_empty_lhs))
+    {
+      # the default rule will be used only for instances unclassified by any of the other rules
+      matches[matches==Inf] <- first_rules_with_empty_lhs
+    }
+    else
+    {
+      stop(paste("There were unclassified instances, the first one has index: ", first_unclassified_instance, " and there is no default rule in the classifier"))
+    }
+
+  }
+
+  matches
+}
+
+
+
 

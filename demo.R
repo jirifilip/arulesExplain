@@ -33,8 +33,8 @@ inspect(itemMatrixRules2)
 qcbaRules
 
 
-
-
+cbaFiringRuleIDs <- explainPrediction.CBARuleModel(rmCBA, train)
+cbaFiringRules <- as.qcba.rules(rmCBA@rules)[cbaFiringRuleIDs,]
 
 # explanation demo
 firingRuleIDs <- predict(rmqCBA,test,outputFiringRuleIDs=TRUE)
@@ -50,7 +50,7 @@ ir <- new("intervalReader",
           rightOpenBracket = ")",
           bracketLen = 0)
 
-explanation_dataframe <- getExplanationsDataframe(rmqCBA, firingRuleIDs, train, includeJustifications = TRUE, ir)
+explanation_dataframe <- getExplanationsDataframe(rmqCBA@rules, firingRuleIDs, train, includeJustifications = TRUE, ir)
 View(explanation_dataframe)
 
 
@@ -58,5 +58,8 @@ explanation_dataframe <- getClassExplanationsDataframe(rmqCBA, data, ir)
 View(explanation_dataframe[["benign"]])
 
 
+cba_explanation_dataframe <- getExplanationsDataframe(as.qcba.rules(rmCBA@rules), cbaFiringRuleIDs, train, includeJustifications = TRUE, ir)
+View(cba_explanation_dataframe)
 
-
+cba_explanation_dataframe <- getClassExplanationsDataframe(rmCBA, train, ir)
+View(cba_explanation_dataframe[["benign"]])
