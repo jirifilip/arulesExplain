@@ -1,0 +1,140 @@
+---
+title: "arulesExplanation"
+output: html_notebook
+---
+
+```{r}
+library(rJava)
+library(qCBA)
+library(arc)
+
+.jinit()
+```
+
+# Data preparation
+
+```{r}
+data <- read.csv("../data/breast-w0.csv")
+
+data[1:5,]
+```
+
+```{r}
+smp_size <- floor(1 * nrow(data))
+set.seed(123)
+
+train_ind <- sample(seq_len(nrow(data)), size = smp_size)
+
+train <- data[train_ind, ]
+test <- data[train_ind, ]
+```
+
+
+# Model training
+
+## CBA
+
+```{r}
+rmCBA <- cba(train, classAtt=colnames(data)[length(colnames(data))])
+```
+
+
+
+```{r}
+inspect(rmCBA@rules[1:5])
+```
+
+## QCBA
+
+```{r}
+rmqCBA <- qcba(cbaRuleModel=rmCBA,datadf=train)
+
+rmqCBA@rules[1:10,]
+```
+
+# Data structure conversion
+
+## Conversion to arules
+
+```{r}
+itemMatrixRules <- as.item.matrix(rmqCBA, train)
+
+inspect(itemMatrixRules[1:5,])
+```
+
+## Conversion to qcba data structure
+
+```{r}
+qcbaRules <- as.qcba.rules(itemMatrixRules)
+
+qcbaRules[1:10,]
+
+```
+
+
+Overwriting the QCBA object slot with the new rules and converting back to arules itemMatrix.
+```{r}
+rmqCBA@rules <- qcbaRules
+
+itemMatrixRules2 <- as.item.matrix(rmqCBA, train)
+
+inspect(itemMatrixRules2[1:10])
+```
+
+# Arules packages interoperability
+```{r}
+library(arulesViz)
+
+itemMatrixRules <- as.item.matrix(rmqCBA, train)
+plot(itemMatrixRules)
+```
+
+```{r}
+plotly_arules(itemMatrixRules)
+```
+
+```{r}
+inspectDT(itemMatrixRules2)
+```
+
+
+# Explanations
+```{r}
+cbaFiringRuleIDs <- explainPrediction.CBARuleModel(rmCBA, train)
+cbaFiringRules <- as.qcba.rules(rmCBA@rules)[cbaFiringRuleIDs,]
+
+# explanation demo
+firingRuleIDs <- predict(rmqCBA,test,outputFiringRuleIDs=TRUE)
+firingRules <- rmqCBA@rules[firingRuleIDs,]
+
+ir <- new("intervalReader",
+          numberSeparator = "_to_",
+          negativeInfinity = "-inf",
+          positiveInfinity = "inf",
+          leftClosedBracket = "<",
+          leftOpenBracket = "",
+          rightClosedBracket = "",
+          rightOpenBracket = ")",
+          bracketLen = 0)
+
+explanation_dataframe <- getExplanationsDataframe(rmqCBA@rules, firingRuleIDs, train, includeJustifications = TRUE, ir)
+
+explanation_dataframe
+```
+
+```{r}
+explanation_dataframe <- getClassExplanationsDataframe(rmqCBA, data, ir)
+explanation_dataframe
+```
+```{r}
+cba_explanation_dataframe <- getExplanationsDataframe(as.qcba.rules(rmCBA@rules), cbaFiringRuleIDs, train, includeJustifications = TRUE, ir)
+
+cba_explanation_dataframe
+```
+
+```{r}
+cba_explanation_dataframe <- getClassExplanationsDataframe(rmCBA, train, ir)
+
+cba_explanation_dataframe[["benign"]]
+```
+
