@@ -1,3 +1,39 @@
+#'
+#'
+
+
+
+#' @importFrom("methods", "as", "new")
+
+
+#' Function for parsing an item like 'eye_color=blue' or 'height=<166;180)' and
+#' outputting a string explaining the item in natural language like 'eye_color is blue'
+#' or 'height is between 166 to 180'.
+#'
+#' @param item A string containing key and value separated by '=', e.g. 'eye_color=(1;5]'
+#' @param intervalReader An object of type intervalReader. It allows different types of brackets,
+#'    commas and infinity types to be defined and read.
+#'
+#'
+#' @examples
+#' parseItem("eye_color=white", new("intervalReader"))
+#
+#' parseItem("eye_color=(1;3)", new("intervalReader"))
+#'
+#' ir <- new("intervalReader",
+#'         numberSeparator = "_to_",
+#'         negativeInfinity = "-inf",
+#'         positiveInfinity = "inf",
+#'         leftClosedBracket = "(",
+#'         leftOpenBracket = "",
+#'         rightClosedBracket = "",
+#'         rightOpenBracket = ")",
+#'         bracketLen = 0)
+#'  parsedItem <- parseItem("eye_color=-inf_to_inf", new("intervalReader"))
+#'
+#' @return string explaning an item in natural language
+#'
+#'
 parseItem <- function (item, intervalReader) {
 
   itemVector <- unlist(strsplit(item, "="))
@@ -51,11 +87,18 @@ parseItem <- function (item, intervalReader) {
   result
 }
 
-
-# calculate rules statistics to use in the natural language explanation
-explainRuleStatistics <- function (index, allRules, consequentStringTrimmed, allData) {
+#' Calculate rules statistics to use in the natural language explanation.
+#'
+#' @param index Index of the rule we want to calculate statistics for.
+#' @param allRules Dataframe containing all of the rules.
+#' @param consequentStringTrimmed Consequent string trimmed of the surrounding curly brackets.
+#' @param data Data to be used to calculate rule statistics.
+#'
+#' @return string explaining rule quality.
+#'
+explainRuleStatistics <- function (index, allRules, consequentStringTrimmed, data) {
   relSupport <- allRules[index, 2]
-  absAupport <- floor(nrow(allData) * relSupport)
+  absAupport <- floor(nrow(data) * relSupport)
   confidence <-  allRules[index, 3]
   incorrectlyPredicted <- floor((absAupport - absAupport * confidence) / confidence)
   numOfCoveredInstances <- floor(incorrectlyPredicted + absAupport)
@@ -75,7 +118,17 @@ explainRuleStatistics <- function (index, allRules, consequentStringTrimmed, all
   qualityText
 }
 
-
+#' Function for explaning QCBA.
+#'
+#' @param rulesText Text of the rules.
+#' @param rules Rule dataframe.
+#' @param allData Data from which the rules were mined.
+#' @param defaultRuleList default rules object from qcba model.
+#' @param intervalReader an intervalReader object used for reading intervals in rules
+#'
+#' @return dataframe containing explanations for rules
+#'
+#'
 explainQCBA <- function (rulesText, rules, allData, defaultRuleList, intervalReader) {
   defaultRule <- defaultRuleList[nrow(defaultRuleList),]
   defaultRuleSupport <- defaultRule[, 2]
@@ -157,7 +210,38 @@ explainQCBA <- function (rulesText, rules, allData, defaultRuleList, intervalRea
   explanation_dataframe
 }
 
-
+#' Function for getting the explanation dataframe.
+#'
+#' @param rules rules dataframe from the model
+#' @param firingRulesID IDs of the rules that classified the instance
+#' @param allData instances that the user wants to get explained
+#' @param includeJustifications switch determining if rule justifications should also
+#'     be included in the final dataframe
+#' @param intervalReader intervalReader that should be used for reading intervals in
+#'     the rules
+#'
+#'
+#' @return explanation dataframe
+#'
+#'
+#' @examples
+#'   library(arc)
+#'
+#'   data <- cars
+#'
+#'   rmCBA <- cba(data, classAtt=colnames(data)[length(colnames(data))])
+#'
+#'
+#'   cbaFiringRuleIDs <- explainPrediction.CBARuleModel(rmCBA, train, discretize=FALSE)
+#'   cbaFiringRules <- as.qcba.rules(rmCBA@rules)[cbaFiringRuleIDs,]
+#'
+#'
+#'
+#'   explanation_dataframe <- getExplanationsDataframe(rmCBA@rules, cbaFiringRuleIDs, train, includeJustifications = TRUE, ir)
+#'
+#'
+#'@export
+#'
 getExplanationsDataframe <- function(rules, firingRulesID, allData, includeJustifications = TRUE, intervalReader = new("intervalReader")) {
   firingRules <- rules[firingRulesID,]
   firingRulesText <- firingRules[,1]
@@ -194,6 +278,41 @@ getExplanationsDataframe <- function(rules, firingRulesID, allData, includeJusti
   explanationDataframe
 }
 
+#' Function for getting the class explanation dataframe.
+#'
+#' @param rm rule model, either qcba or arc
+#' @param allData data on which the rule model was trained
+#' @param intervalReader intervalReader that should be used for reading intervals in
+#'     the rules
+#'
+#'
+#' @return list (where classes are keys) of class explanation dataframes
+#'
+#'
+#' @examples
+#'   data <- cars
+#'
+#'   rmCBA <- cba(data, classAtt=colnames(data)[length(colnames(data))])
+#'
+#'   cbaFiringRuleIDs <- explainPrediction.CBARuleModel(rmCBA, train)
+#'   cbaFiringRules <- as.qcba.rules(rmCBA@rules)[cbaFiringRuleIDs,]
+#'
+#'   ir <- new("intervalReader",
+#'                numberSeparator = "_to_",
+#'                negativeInfinity = "-inf",
+#'                positiveInfinity = "inf",
+#'                leftClosedBracket = "<",
+#'                leftOpenBracket = "",
+#'                rightClosedBracket = "",
+#'                rightOpenBracket = ")",
+#'                bracketLen = 0)
+#'
+#'
+#'   explanation_dataframe <- getClassExplanationsDataframe(rmCBA, data, ir)
+#'
+#'
+#' @export
+#'
 getClassExplanationsDataframe <- function(rm, allData, intervalReader) {
   rules <- rm@rules
 
@@ -266,6 +385,16 @@ getClassExplanationsDataframe <- function(rm, allData, intervalReader) {
   resultList
 }
 
+
+#' Function for getting information about the next best rule which has different
+#' class from the current rule.
+#'
+#' @param rules dataframe containing rules information
+#' @param ruleIndex index of the rule we want to get conflicting text for
+#' @param data data on which the model was trained
+#'
+#' @return conflicting rule text
+#'
 getQCBAConflictingRuleText <- function(rules, ruleIndex, data) {
   if (ruleIndex == nrow(rules)) {
     return("No specific conflicting rule found.")
@@ -366,9 +495,25 @@ getQCBAConflictingRuleText <- function(rules, ruleIndex, data) {
 
 
 
-
-
-
+#' Function for investigating which rule classified an instance.
+#'
+#' @param object CBARuleModel object
+#' @param data testing data for prediction
+#' @param discretize determines if data should be discretized or not
+#' @param ... other arguments (currently not used)
+#'
+#' @return vector of rule IDs
+#'
+#' @examples
+#'   data <- cars
+#'
+#'   rmCBA <- cba(data, classAtt=colnames(data)[length(colnames(data))])
+#'
+#'   cbaFiringRuleIDs <- explainPrediction.CBARuleModel(rmCBA, data, discretize=TRUE)
+#'
+#'  @export
+#'  @method explainPrediction CBARuleModel
+#'
 explainPrediction.CBARuleModel  <- function (object, data, discretize = TRUE, ...) {
   if (discretize && length(object@cutp)>0) {
     data <- applyCuts(data, object@cutp, infinite_bounds=TRUE, labels=TRUE)

@@ -1,7 +1,7 @@
 library(qCBA)
 library(stringr)
-data <- read.csv("data/breast-w0.csv")
-
+#data <- read.csv("data/breast-w0.csv")
+data <- cars
 
 smp_size <- floor(1 * nrow(data))
 set.seed(123)

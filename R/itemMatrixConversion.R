@@ -1,3 +1,26 @@
+#' @importFrom("methods", "as", "new")
+
+
+#' Function for converting qcba rules dataframe structure to arules
+#' itemMatrix structure.
+#'
+#'
+#' @param qcbaRuleModel qcba rule model
+#' @param trainingData data which was used for training the rule model
+#'
+#' @examples
+#'   library(arc)
+#'   library(qCBA)
+#'
+#'   data <- cars
+#'
+#'   rmCBA <- cba(data, classAtt=colnames(data)[length(colnames(data))])
+#'   rmqCBA <- qcba(cbaRuleModel=rmCBA,datadf=data)
+#'
+#'   itemMatrixRules <- as.item.matrix(rmqCBA, data)
+#'
+#'  @export
+#'
 as.item.matrix <- function (qcbaRuleModel, trainingData) {
   lhs_itemsets <- c()
   rhs_itemsets <- c()
@@ -83,7 +106,26 @@ as.item.matrix <- function (qcbaRuleModel, trainingData) {
 }
 
 
-
+#' Function for converting arules rules data structure to qcba dataframe.
+#'
+#'
+#' @param rules rules to be converted to qcba data structure
+#'
+#' @examples
+#'   library(arc)
+#'   library(qCBA)
+#'
+#'   data <- cars
+#'
+#'   rmCBA <- cba(data, classAtt=colnames(data)[length(colnames(data))])
+#'   rmqCBA <- qcba(cbaRuleModel=rmCBA,datadf=data)
+#'
+#'   itemMatrixRules <- as.item.matrix(rmqCBA, data)
+#'   qcbaRules <- as.qcba.rules(itemMatrixRules)
+#'
+#'
+#'  @export
+#'
 as.qcba.rules <- function (rules) {
 
   lhsMatrix <- as(rules@lhs, "matrix")

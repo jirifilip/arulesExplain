@@ -1,11 +1,16 @@
 Package: arulesExplanation
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Arules Explanation
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
-License: What license is it under?
+Author: Jiri Filip
+Maintainer: Jiri Filip <j.f.ilip@seznam.cz>
+Description: arulesExplanation provides a way to convert arules data structures to
+    explanations which can be easily understood by non-experts.
+License: MIT
+Depends:
+    arules,
+    arc
 Encoding: UTF-8
 LazyData: true
+Suggests: testthat
+RoxygenNote: 6.1.1

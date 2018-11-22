@@ -1,3 +1,21 @@
+#' intervalReader
+#'
+#' This class serves s data structure for storing different configurations
+#' for interval reading.
+#'
+#' @slot numberSeparator string for separating numbers in an interval
+#' @slot leftClosedBracket left closed bracket string
+#' @slot rightClosedBracket right closed bracket string
+#' @slot leftOpenBracket left open bracket string
+#' @slot rightOpenBracket right open bracket string
+#' @slot negativeInfinity negative infinity string
+#' @slot positiveInfinity positive infinity string
+#' @slot bracketLen how long in chars a bracket is
+#' @slot decimalSeparator string used as a decimal separator in an interval
+#'
+#'
+#'
+#'
 setClass("intervalReader",
 
   representation(
@@ -29,6 +47,21 @@ setClass("intervalReader",
 
 
 
+#' Helper function for creating an intervalReader object.
+#'
+#'
+#' @param numberSeparator string for separating numbers in an interval
+#' @param closedBrackets vector of length 2 for parsing closed brackets
+#' @param openBrackets vector of length 2 for parsing open brackets
+#' @param infinities vector of length 2 for parsing positive and negative infinities
+#' @param bracketLen how long in chars a bracket is
+#' @param decimalSeparator string used as a decimal separator in an interval
+#'
+#'
+#' @return new intervalReader object
+#'
+#' @export
+#'
 createIntervalReader <- function(numberSeparator = ";",
                                  closedBrackets = c("(", ")"),
                                  openBrackets = c("[", "]"),
