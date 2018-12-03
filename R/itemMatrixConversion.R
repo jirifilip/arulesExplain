@@ -1,5 +1,8 @@
-#' @importFrom("methods", "as", "new")
+#@importFrom methods as new
 
+#' @import arules
+#' @import arc
+NULL
 
 #' Function for converting qcba rules dataframe structure to arules
 #' itemMatrix structure.
@@ -19,8 +22,7 @@
 #'
 #'   itemMatrixRules <- as.item.matrix(rmqCBA, data)
 #'
-#'  @export
-#'
+#' @export
 as.item.matrix <- function (qcbaRuleModel, trainingData) {
   lhs_itemsets <- c()
   rhs_itemsets <- c()
@@ -124,8 +126,7 @@ as.item.matrix <- function (qcbaRuleModel, trainingData) {
 #'   qcbaRules <- as.qcba.rules(itemMatrixRules)
 #'
 #'
-#'  @export
-#'
+#' @export
 as.qcba.rules <- function (rules) {
 
   lhsMatrix <- as(rules@lhs, "matrix")

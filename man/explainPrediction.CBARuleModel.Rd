@@ -28,7 +28,4 @@ Function for investigating which rule classified an instance.
 
   cbaFiringRuleIDs <- explainPrediction.CBARuleModel(rmCBA, data, discretize=TRUE)
 
- @export
- @method explainPrediction CBARuleModel
-
 }

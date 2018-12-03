@@ -14,11 +14,11 @@ getExplanationsDataframe(rules, firingRulesID, allData,
 
 \item{allData}{instances that the user wants to get explained}
 
-\item{includeJustifications}{switch determining if rule justifications should also
-be included in the final dataframe}
+\item{includeJustifications}{switch determining if rule justifications
+should also be included in the final dataframe}
 
-\item{intervalReader}{intervalReader that should be used for reading intervals in
-the rules}
+\item{intervalReader}{intervalReader that should be used for reading
+intervals in the rules}
 }
 \value{
 explanation dataframe
@@ -39,7 +39,9 @@ Function for getting the explanation dataframe.
 
 
 
-  explanation_dataframe <- getExplanationsDataframe(rmCBA@rules, cbaFiringRuleIDs, train, includeJustifications = TRUE, ir)
+  explanation_dataframe <- getExplanationsDataframe(rmCBA@rules, cbaFiringRuleIDs, train,
+      includeJustifications = TRUE, ir)
+
 
 
 }

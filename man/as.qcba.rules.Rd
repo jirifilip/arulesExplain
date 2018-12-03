@@ -25,6 +25,4 @@ Function for converting arules rules data structure to qcba dataframe.
   qcbaRules <- as.qcba.rules(itemMatrixRules)
 
 
- @export
-
 }

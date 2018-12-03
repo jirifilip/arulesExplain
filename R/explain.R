@@ -1,10 +1,19 @@
+#' @importFrom arc applyCuts
+NULL
+
+
 #'
+#' arulesExplanation: A package for computating the notorious bar statistic.
 #'
-
-
-
-#' @importFrom("methods", "as", "new")
-
+#' The foo package provides three categories of important functions:
+#' foo, bar and baz.
+#'
+#' @section Foo functions:
+#' The foo functions ...
+#'
+#' @docType package
+#' @name arulesExplanation
+NULL
 
 #' Function for parsing an item like 'eye_color=blue' or 'height=<166;180)' and
 #' outputting a string explaining the item in natural language like 'eye_color is blue'
@@ -16,11 +25,11 @@
 #'
 #'
 #' @examples
-#' parseItem("eye_color=white", new("intervalReader"))
-#
-#' parseItem("eye_color=(1;3)", new("intervalReader"))
+#'   parseItem("eye_color=white", new("intervalReader"))
 #'
-#' ir <- new("intervalReader",
+#'   parseItem("eye_color=(1;3)", new("intervalReader"))
+#'
+#'   ir <- new("intervalReader",
 #'         numberSeparator = "_to_",
 #'         negativeInfinity = "-inf",
 #'         positiveInfinity = "inf",
@@ -29,7 +38,7 @@
 #'         rightClosedBracket = "",
 #'         rightOpenBracket = ")",
 #'         bracketLen = 0)
-#'  parsedItem <- parseItem("eye_color=-inf_to_inf", new("intervalReader"))
+#'   parsedItem <- parseItem("eye_color=-inf_to_inf", new("intervalReader"))
 #'
 #' @return string explaning an item in natural language
 #'
@@ -215,10 +224,10 @@ explainQCBA <- function (rulesText, rules, allData, defaultRuleList, intervalRea
 #' @param rules rules dataframe from the model
 #' @param firingRulesID IDs of the rules that classified the instance
 #' @param allData instances that the user wants to get explained
-#' @param includeJustifications switch determining if rule justifications should also
-#'     be included in the final dataframe
-#' @param intervalReader intervalReader that should be used for reading intervals in
-#'     the rules
+#' @param includeJustifications switch determining if rule justifications
+#'     should also be included in the final dataframe
+#' @param intervalReader intervalReader that should be used for reading
+#'     intervals in the rules
 #'
 #'
 #' @return explanation dataframe
@@ -237,10 +246,12 @@ explainQCBA <- function (rulesText, rules, allData, defaultRuleList, intervalRea
 #'
 #'
 #'
-#'   explanation_dataframe <- getExplanationsDataframe(rmCBA@rules, cbaFiringRuleIDs, train, includeJustifications = TRUE, ir)
+#'   explanation_dataframe <- getExplanationsDataframe(rmCBA@rules, cbaFiringRuleIDs, train,
+#'       includeJustifications = TRUE, ir)
 #'
 #'
-#'@export
+#'
+#' @export
 #'
 getExplanationsDataframe <- function(rules, firingRulesID, allData, includeJustifications = TRUE, intervalReader = new("intervalReader")) {
   firingRules <- rules[firingRulesID,]
@@ -511,8 +522,7 @@ getQCBAConflictingRuleText <- function(rules, ruleIndex, data) {
 #'
 #'   cbaFiringRuleIDs <- explainPrediction.CBARuleModel(rmCBA, data, discretize=TRUE)
 #'
-#'  @export
-#'  @method explainPrediction CBARuleModel
+#' @export
 #'
 explainPrediction.CBARuleModel  <- function (object, data, discretize = TRUE, ...) {
   if (discretize && length(object@cutp)>0) {
