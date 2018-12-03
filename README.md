@@ -43,9 +43,6 @@ cbaFiringRules <- as.qcba.rules(rmCBA@rules)[cbaFiringRuleIDs,]
 firingRuleIDs <- predict(rmqCBA,train,outputFiringRuleIDs=TRUE)
 firingRules <- rmqCBA@rules[firingRuleIDs,]
 
-cba_explanation_dataframe <- getExplanationsDataframe(as.qcba.rules(rmCBA@rules), cbaFiringRuleIDs, train, includeJustifications = TRUE, ir)
+cba_explanation_dataframe <- getExplanationsDataframe(as.qcba.rules(rmCBA@rules), cbaFiringRuleIDs, train, includeJustifications = TRUE, createIntervalReader())
 View(cba_explanation_dataframe)
-
-cba_explanation_dataframe <- getClassExplanationsDataframe(rmCBA, train, ir)
-View(cba_explanation_dataframe[["virginica"]])
 ```

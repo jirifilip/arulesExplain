@@ -43,7 +43,7 @@ ir <- new("intervalReader",
           rightOpenBracket = ")",
           bracketLen = 0)
 
-explanation_dataframe <- getExplanationsDataframe(rmqCBA@rules, firingRuleIDs, train, includeJustifications = TRUE, createIntervalReader())
+explanation_dataframe <- getExplanationsDataframe(rmqCBA@rules, firingRuleIDs, train, includeJustifications = TRUE, ir)
 View(explanation_dataframe)
 
 
@@ -51,8 +51,8 @@ explanation_dataframe <- getClassExplanationsDataframe(rmqCBA, train, createInte
 View(explanation_dataframe[["benign"]])
 
 
-cba_explanation_dataframe <- getExplanationsDataframe(as.qcba.rules(rmCBA@rules), cbaFiringRuleIDs, train, includeJustifications = TRUE, ir)
+cba_explanation_dataframe <- getExplanationsDataframe(as.qcba.rules(rmCBA@rules), cbaFiringRuleIDs, train, includeJustifications = TRUE, createIntervalReader())
 View(cba_explanation_dataframe)
 
-cba_explanation_dataframe <- getClassExplanationsDataframe(rmCBA, train, ir)
+cba_explanation_dataframe <- getClassExplanationsDataframe(rmCBA, train, createIntervalReader())
 View(cba_explanation_dataframe[["virginica"]])
