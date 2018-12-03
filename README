@@ -1,13 +1,26 @@
-library(qCBA)
-library(stringr)
+# arulesExplanation
 
+*arulesExplanation* provides a way to convert *arules* data structures to
+    explanations which can be easily understood by non-experts. This means explaining all the rules
+    in a classifier or simply getting a human-readable version of a rule that classified certain instance.
+    Additionally, it provides several convenience functions for converting data structures
+    between the *qCBA* and *arules* packages.
+
+
+## Examples
+
+### Data preparation
+```R
+library(qCBA)
 
 train <- iris
 
 rmCBA <- cba(train, classAtt=colnames(train)[length(colnames(train))])
 rmqCBA <- qcba(cbaRuleModel=rmCBA,datadf=train)
+```
 
-
+### Data structures conversion
+```R
 # conversion to arules data structure - itemMatrix
 itemMatrixRules <- as.item.matrix(rmqCBA, train)
 
@@ -19,13 +32,10 @@ rmqCBA@rules <- qcbaRules
 
 # convert back to arules itemMatrix
 itemMatrixRules2 <- as.item.matrix(rmqCBA, train)
+```
 
-
-inspect(itemMatrixRules)
-inspect(itemMatrixRules2)
-qcbaRules
-
-
+### Rules explanation
+```R
 cbaFiringRuleIDs <- explainPrediction.CBARuleModel(rmCBA, train)
 cbaFiringRules <- as.qcba.rules(rmCBA@rules)[cbaFiringRuleIDs,]
 
@@ -33,26 +43,9 @@ cbaFiringRules <- as.qcba.rules(rmCBA@rules)[cbaFiringRuleIDs,]
 firingRuleIDs <- predict(rmqCBA,train,outputFiringRuleIDs=TRUE)
 firingRules <- rmqCBA@rules[firingRuleIDs,]
 
-ir <- new("intervalReader",
-          numberSeparator = "_to_",
-          negativeInfinity = "-inf",
-          positiveInfinity = "inf",
-          leftClosedBracket = "<",
-          leftOpenBracket = "",
-          rightClosedBracket = "",
-          rightOpenBracket = ")",
-          bracketLen = 0)
-
-explanation_dataframe <- getExplanationsDataframe(rmqCBA@rules, firingRuleIDs, train, includeJustifications = TRUE, createIntervalReader())
-View(explanation_dataframe)
-
-
-explanation_dataframe <- getClassExplanationsDataframe(rmqCBA, train, createIntervalReader())
-View(explanation_dataframe[["benign"]])
-
-
 cba_explanation_dataframe <- getExplanationsDataframe(as.qcba.rules(rmCBA@rules), cbaFiringRuleIDs, train, includeJustifications = TRUE, ir)
 View(cba_explanation_dataframe)
 
 cba_explanation_dataframe <- getClassExplanationsDataframe(rmCBA, train, ir)
 View(cba_explanation_dataframe[["virginica"]])
+```
