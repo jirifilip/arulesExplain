@@ -29,12 +29,12 @@ Function for getting the explanation dataframe.
 \examples{
   library(arc)
 
-  data <- cars
+  data <- iris
 
   rmCBA <- cba(data, classAtt=colnames(data)[length(colnames(data))])
 
 
-  cbaFiringRuleIDs <- explainPrediction.CBARuleModel(rmCBA, train, discretize=FALSE)
+  cbaFiringRuleIDs <- explainPrediction.CBARuleModel(rmCBA, data, discretize=TRUE)
   cbaFiringRules <- as.qcba.rules(rmCBA@rules)[cbaFiringRuleIDs,]
 
 

@@ -22,7 +22,9 @@ vector of rule IDs
 Function for investigating which rule classified an instance.
 }
 \examples{
-  data <- cars
+  library(arc)
+
+  data <- iris
 
   rmCBA <- cba(data, classAtt=colnames(data)[length(colnames(data))])
 

@@ -2,8 +2,10 @@ Package: arulesExplanation
 Type: Package
 Title: Arules Explanation
 Version: 0.1.0
-Author: Jiri Filip
-Maintainer: Jiri Filip <j.f.ilip@seznam.cz>
+Authors@R: as.person(c(
+    "Jiří Filip <filj03@vse.cz> [aut, cre, ctb]", 
+    "Tomas Kliegr <tomas.kliegr@vse.cz> [aut, ctb]"
+  ))
 Description: arulesExplanation provides a way to convert arules data structures to
     natural language explanations, which can be understood by non-experts. The package can explain all rules
     in a classifier, or only explain a rule that classified a certain instance.
@@ -11,8 +13,12 @@ Description: arulesExplanation provides a way to convert arules data structures 
     between the qCBA and arules packages.
 License: MIT + file LICENSE
 Depends:
-    arules,
+    R (>= 2.10)
+Imports:
     arc,
+    arules,
+    methods,
+    qCBA
 Encoding: UTF-8
 LazyData: true
 Suggests: testthat

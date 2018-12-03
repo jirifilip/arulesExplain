@@ -21,25 +21,16 @@ list (where classes are keys) of class explanation dataframes
 Function for getting the class explanation dataframe.
 }
 \examples{
-  data <- cars
+  library(arc)
 
-  rmCBA <- cba(data, classAtt=colnames(data)[length(colnames(data))])
+  train <- iris
+
+  rmCBA <- cba(train, classAtt=colnames(train)[length(colnames(train))])
 
   cbaFiringRuleIDs <- explainPrediction.CBARuleModel(rmCBA, train)
   cbaFiringRules <- as.qcba.rules(rmCBA@rules)[cbaFiringRuleIDs,]
 
-  ir <- new("intervalReader",
-               numberSeparator = "_to_",
-               negativeInfinity = "-inf",
-               positiveInfinity = "inf",
-               leftClosedBracket = "<",
-               leftOpenBracket = "",
-               rightClosedBracket = "",
-               rightOpenBracket = ")",
-               bracketLen = 0)
-
-
-  explanation_dataframe <- getClassExplanationsDataframe(rmCBA, data, ir)
+  explanation_dataframe <- getClassExplanationsDataframe(rmCBA, train, createIntervalReader())
 
 
 }

@@ -1,20 +1,3 @@
-#' @importFrom arc applyCuts
-NULL
-
-
-#'
-#' arulesExplanation: A package for computating the notorious bar statistic.
-#'
-#' The foo package provides three categories of important functions:
-#' foo, bar and baz.
-#'
-#' @section Foo functions:
-#' The foo functions ...
-#'
-#' @docType package
-#' @name arulesExplanation
-NULL
-
 #' Function for parsing an item like 'eye_color=blue' or 'height=<166;180)' and
 #' outputting a string explaining the item in natural language like 'eye_color is blue'
 #' or 'height is between 166 to 180'.
@@ -236,12 +219,12 @@ explainQCBA <- function (rulesText, rules, allData, defaultRuleList, intervalRea
 #' @examples
 #'   library(arc)
 #'
-#'   data <- cars
+#'   data <- iris
 #'
 #'   rmCBA <- cba(data, classAtt=colnames(data)[length(colnames(data))])
 #'
 #'
-#'   cbaFiringRuleIDs <- explainPrediction.CBARuleModel(rmCBA, train, discretize=FALSE)
+#'   cbaFiringRuleIDs <- explainPrediction.CBARuleModel(rmCBA, data, discretize=TRUE)
 #'   cbaFiringRules <- as.qcba.rules(rmCBA@rules)[cbaFiringRuleIDs,]
 #'
 #'
@@ -301,25 +284,16 @@ getExplanationsDataframe <- function(rules, firingRulesID, allData, includeJusti
 #'
 #'
 #' @examples
-#'   data <- cars
+#'   library(arc)
 #'
-#'   rmCBA <- cba(data, classAtt=colnames(data)[length(colnames(data))])
+#'   train <- iris
+#'
+#'   rmCBA <- cba(train, classAtt=colnames(train)[length(colnames(train))])
 #'
 #'   cbaFiringRuleIDs <- explainPrediction.CBARuleModel(rmCBA, train)
 #'   cbaFiringRules <- as.qcba.rules(rmCBA@rules)[cbaFiringRuleIDs,]
 #'
-#'   ir <- new("intervalReader",
-#'                numberSeparator = "_to_",
-#'                negativeInfinity = "-inf",
-#'                positiveInfinity = "inf",
-#'                leftClosedBracket = "<",
-#'                leftOpenBracket = "",
-#'                rightClosedBracket = "",
-#'                rightOpenBracket = ")",
-#'                bracketLen = 0)
-#'
-#'
-#'   explanation_dataframe <- getClassExplanationsDataframe(rmCBA, data, ir)
+#'   explanation_dataframe <- getClassExplanationsDataframe(rmCBA, train, createIntervalReader())
 #'
 #'
 #' @export
@@ -516,7 +490,9 @@ getQCBAConflictingRuleText <- function(rules, ruleIndex, data) {
 #' @return vector of rule IDs
 #'
 #' @examples
-#'   data <- cars
+#'   library(arc)
+#'
+#'   data <- iris
 #'
 #'   rmCBA <- cba(data, classAtt=colnames(data)[length(colnames(data))])
 #'
