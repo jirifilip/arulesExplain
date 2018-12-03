@@ -1,10 +1,10 @@
 # arulesExplanation
 
-*arulesExplanation* provides a way to convert *arules* data structures to
+arulesExplanation provides a way to convert arules data structures to
     explanations which can be easily understood by non-experts. This means explaining all the rules
     in a classifier or simply getting a human-readable version of a rule that classified certain instance.
     Additionally, it provides several convenience functions for converting data structures
-    between the *qCBA* and *arules* packages.
+    between the qCBA and arules packages.
 
 
 ## Examples
