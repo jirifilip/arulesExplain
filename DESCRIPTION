@@ -5,9 +5,9 @@ Version: 0.1.0
 Author: Jiri Filip
 Maintainer: Jiri Filip <j.f.ilip@seznam.cz>
 Description: arulesExplanation provides a way to convert arules data structures to
-    explanations which can be easily understood by non-experts. This means explaining all the rules
-    in a classifier or simply getting a human-readable version of a rule that classified certain instance.
-    Additionally, it provides several convenience functions for converting data structures
+    natural language explanations, which can be understood by non-experts. The package can explain all rules
+    in a classifier, or only explain a rule that classified a certain instance.
+    Additionally, arulesExplanation provides several convenience functions for converting data structures
     between the qCBA and arules packages.
 License: MIT + file LICENSE
 Depends:
