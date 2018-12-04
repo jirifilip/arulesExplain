@@ -7,24 +7,6 @@
 #'    commas and infinity types to be defined and read.
 #'
 #'
-#' @examples
-#'   parseItem("eye_color=white", new("intervalReader"))
-#'
-#'   parseItem("eye_color=(1;3)", new("intervalReader"))
-#'
-#'   ir <- new("intervalReader",
-#'         numberSeparator = "_to_",
-#'         negativeInfinity = "-inf",
-#'         positiveInfinity = "inf",
-#'         leftClosedBracket = "(",
-#'         leftOpenBracket = "",
-#'         rightClosedBracket = "",
-#'         rightOpenBracket = ")",
-#'         bracketLen = 0)
-#'   parsedItem <- parseItem("eye_color=-inf_to_inf", new("intervalReader"))
-#'
-#' @return string explaning an item in natural language
-#'
 #'
 parseItem <- function (item, intervalReader) {
 
@@ -98,7 +80,7 @@ explainRuleStatistics <- function (index, allRules, consequentStringTrimmed, dat
   qualityText <- paste(
     "There were",
     numOfCoveredInstances,
-    "clients which match the conditions of this rule in the training dataset. Out of these",
+    "instances which match the conditions of this rule in the training dataset. Out of these",
     absAupport,
     "are predicted correctly as having",
     consequentStringTrimmed,
@@ -229,8 +211,8 @@ explainQCBA <- function (rulesText, rules, allData, defaultRuleList, intervalRea
 #'
 #'
 #'
-#'   explanation_dataframe <- getExplanationsDataframe(rmCBA@rules, cbaFiringRuleIDs, train,
-#'       includeJustifications = TRUE, ir)
+#'   explanation_dataframe <- getExplanationsDataframe(cbaFiringRules, cbaFiringRuleIDs, data,
+#'       includeJustifications = TRUE, createIntervalReader())
 #'
 #'
 #'

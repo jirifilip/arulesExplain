@@ -39,8 +39,8 @@ Function for getting the explanation dataframe.
 
 
 
-  explanation_dataframe <- getExplanationsDataframe(rmCBA@rules, cbaFiringRuleIDs, train,
-      includeJustifications = TRUE, ir)
+  explanation_dataframe <- getExplanationsDataframe(cbaFiringRules, cbaFiringRuleIDs, data,
+      includeJustifications = TRUE, createIntervalReader())
 
 
 

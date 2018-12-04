@@ -14,28 +14,8 @@ parseItem(item, intervalReader)
 \item{intervalReader}{An object of type intervalReader. It allows different types of brackets,
 commas and infinity types to be defined and read.}
 }
-\value{
-string explaning an item in natural language
-}
 \description{
 Function for parsing an item like 'eye_color=blue' or 'height=<166;180)' and
 outputting a string explaining the item in natural language like 'eye_color is blue'
 or 'height is between 166 to 180'.
-}
-\examples{
-  parseItem("eye_color=white", new("intervalReader"))
-
-  parseItem("eye_color=(1;3)", new("intervalReader"))
-
-  ir <- new("intervalReader",
-        numberSeparator = "_to_",
-        negativeInfinity = "-inf",
-        positiveInfinity = "inf",
-        leftClosedBracket = "(",
-        leftOpenBracket = "",
-        rightClosedBracket = "",
-        rightOpenBracket = ")",
-        bracketLen = 0)
-  parsedItem <- parseItem("eye_color=-inf_to_inf", new("intervalReader"))
-
 }
