@@ -35,7 +35,7 @@ Function for getting the explanation dataframe.
 
 
   cbaFiringRuleIDs <- explainPrediction.CBARuleModel(rmCBA, data, discretize=TRUE)
-  cbaFiringRules <- as.qcba.rules(rmCBA@rules)[cbaFiringRuleIDs,]
+  cbaFiringRules <- as.qcba.rules(rmCBA@rules)
 
 
 

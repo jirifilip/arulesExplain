@@ -65,7 +65,7 @@ setClass("intervalReader",
 createIntervalReader <- function(numberSeparator = ";",
                                  closedBrackets = c("(", ")"),
                                  openBrackets = c("[", "]"),
-                                 infinities = c("-Inf", "Inf"),
+                                 infinities = c("-Inf", " Inf"),
                                  bracketLen = 1,
                                  decimalSeparator = ".") {
 

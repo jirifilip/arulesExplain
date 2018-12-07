@@ -5,7 +5,7 @@
 \title{Helper function for creating an intervalReader object.}
 \usage{
 createIntervalReader(numberSeparator = ";", closedBrackets = c("(",
-  ")"), openBrackets = c("[", "]"), infinities = c("-Inf", "Inf"),
+  ")"), openBrackets = c("[", "]"), infinities = c("-Inf", " Inf"),
   bracketLen = 1, decimalSeparator = ".")
 }
 \arguments{

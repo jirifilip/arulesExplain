@@ -207,7 +207,7 @@ explainQCBA <- function (rulesText, rules, allData, defaultRuleList, intervalRea
 #'
 #'
 #'   cbaFiringRuleIDs <- explainPrediction.CBARuleModel(rmCBA, data, discretize=TRUE)
-#'   cbaFiringRules <- as.qcba.rules(rmCBA@rules)[cbaFiringRuleIDs,]
+#'   cbaFiringRules <- as.qcba.rules(rmCBA@rules)
 #'
 #'
 #'
@@ -219,7 +219,9 @@ explainQCBA <- function (rulesText, rules, allData, defaultRuleList, intervalRea
 #' @export
 #'
 getExplanationsDataframe <- function(rules, firingRulesID, allData, includeJustifications = TRUE, intervalReader = new("intervalReader")) {
+
   firingRules <- rules[firingRulesID,]
+
   firingRulesText <- firingRules[,1]
 
   explanationDataframe <- explainQCBA(firingRulesText, firingRules, allData, rules, intervalReader)
@@ -273,7 +275,7 @@ getExplanationsDataframe <- function(rules, firingRulesID, allData, includeJusti
 #'   rmCBA <- cba(train, classAtt=colnames(train)[length(colnames(train))])
 #'
 #'   cbaFiringRuleIDs <- explainPrediction.CBARuleModel(rmCBA, train)
-#'   cbaFiringRules <- as.qcba.rules(rmCBA@rules)[cbaFiringRuleIDs,]
+#'   cbaFiringRules <- as.qcba.rules(rmCBA@rules)
 #'
 #'   explanation_dataframe <- getClassExplanationsDataframe(rmCBA, train, createIntervalReader())
 #'

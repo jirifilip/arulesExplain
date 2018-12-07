@@ -2,10 +2,9 @@ Package: arulesExplanation
 Type: Package
 Title: Arules Explanation
 Version: 0.1.0
-Authors@R: as.person(c(
-    "Jiří Filip <filj03@vse.cz> [aut, cre, ctb]", 
-    "Tomas Kliegr <tomas.kliegr@vse.cz> [aut, ctb]"
-  ))
+Authors@R: c(
+    person("Jiri", "Filip", email = "filj03@vse.cz", role = c("aut", "cre", "ctb", "cph")),
+    person("Tomas", "Kliegr", email = "tomas.kliegr@vse.cz", role = c("aut", "ctb")))
 Description: arulesExplanation provides a way to convert arules data structures to
     natural language explanations, which can be understood by non-experts. The package can explain all rules
     in a classifier, or only explain a rule that classified a certain instance.

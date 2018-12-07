@@ -28,7 +28,7 @@ Function for getting the class explanation dataframe.
   rmCBA <- cba(train, classAtt=colnames(train)[length(colnames(train))])
 
   cbaFiringRuleIDs <- explainPrediction.CBARuleModel(rmCBA, train)
-  cbaFiringRules <- as.qcba.rules(rmCBA@rules)[cbaFiringRuleIDs,]
+  cbaFiringRules <- as.qcba.rules(rmCBA@rules)
 
   explanation_dataframe <- getClassExplanationsDataframe(rmCBA, train, createIntervalReader())
 
