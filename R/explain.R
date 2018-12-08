@@ -218,13 +218,13 @@ explainQCBA <- function (rulesText, rules, allData, defaultRuleList, intervalRea
 #'
 #' @export
 #'
-getExplanationsDataframe <- function(rules, firingRulesID, allData, includeJustifications = TRUE, intervalReader = new("intervalReader")) {
+getExplanationsDataframe <- function(rules, firingRulesID, originalData, includeJustifications = TRUE, intervalReader = new("intervalReader")) {
 
   firingRules <- rules[firingRulesID,]
 
   firingRulesText <- firingRules[,1]
 
-  explanationDataframe <- explainQCBA(firingRulesText, firingRules, allData, rules, intervalReader)
+  explanationDataframe <- explainQCBA(firingRulesText, firingRules, originalData, rules, intervalReader)
 
   if (!includeJustifications) {
     explanationDataframeWithoutJustifications <- explanationDataframe
@@ -247,7 +247,7 @@ getExplanationsDataframe <- function(rules, firingRulesID, allData, includeJusti
 
   textVector <- c()
   for (i in firingRulesID) {
-    text <- getQCBAConflictingRuleText(rules, i, allData)
+    text <- getQCBAConflictingRuleText(rules, i, originalData)
 
     textVector <- c(textVector, text)
   }

@@ -1,0 +1,65 @@
+context("Getting explanations")
+
+library(qCBA)
+library(arc)
+
+test_that("text explanations are correct", {
+  data <- iris
+
+  indexSubset <- seq(1, nrow(data), by = 10)
+  dataSubset <- data[indexSubset,]
+
+  rmCBA <- cba(data, classAtt=colnames(data)[length(colnames(data))])
+  cbaFiringRuleIDs <- explainPrediction.CBARuleModel(rmCBA, dataSubset, discretize=TRUE)
+  cbaFiringRules <- as.qcba.rules(rmCBA@rules)
+  explanation_dataframe <- getExplanationsDataframe(cbaFiringRules, cbaFiringRuleIDs, dataSubset,
+                                                  includeJustifications = TRUE, createIntervalReader())
+
+  for (i in 1:5) {
+    expect_equal(
+      "IF Petal.Length is lower than 2.45 THEN Species is setosa",
+      explanation_dataframe$explanation[[i]])
+  }
+
+
+  expect_equal(
+    "IF Sepal.Length is greater than or equal to 6.15 and Petal.Length is between 2.45 to 4.75 THEN Species is versicolor",
+    explanation_dataframe$explanation[[6]])
+  expect_equal(
+    "Among instances not covered by any of the rules, the majority (1 out of 5) have Species=versicolor",
+    explanation_dataframe$explanation[[7]])
+  expect_equal(
+    "IF Petal.Width is greater than or equal to 1.75 THEN Species is virginica",
+    explanation_dataframe$explanation[[8]])
+
+  expect_equal(
+    "Among instances not covered by any of the rules, the majority (1 out of 5) have Species=versicolor",
+    explanation_dataframe$explanation[[9]])
+  expect_equal(
+    "Among instances not covered by any of the rules, the majority (1 out of 5) have Species=versicolor",
+    explanation_dataframe$explanation[[10]])
+  expect_equal(
+    "IF Sepal.Length is greater than or equal to 6.15 and Petal.Width is greater than or equal to 1.75 THEN Species is virginica",
+    explanation_dataframe$explanation[[11]])
+  expect_equal(
+    "IF Sepal.Length is greater than or equal to 6.15 and Petal.Width is greater than or equal to 1.75 THEN Species is virginica",
+    explanation_dataframe$explanation[[12]])
+  expect_equal(
+    "IF Sepal.Length is greater than or equal to 6.15 and Petal.Width is greater than or equal to 1.75 THEN Species is virginica",
+    explanation_dataframe$explanation[[13]])
+  expect_equal(
+    "IF Sepal.Length is greater than or equal to 6.15 and Petal.Width is greater than or equal to 1.75 THEN Species is virginica",
+    explanation_dataframe$explanation[[14]])
+  expect_equal(
+    "IF Sepal.Length is greater than or equal to 6.15 and Petal.Width is greater than or equal to 1.75 THEN Species is virginica",
+    explanation_dataframe$explanation[[15]])
+})
+
+
+test_that("justifications are correct", {
+
+  correct_justifications <- c(
+
+  )
+
+})
