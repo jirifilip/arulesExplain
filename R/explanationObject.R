@@ -6,12 +6,14 @@ explanationObject <- setClass("explanationObject",
 
  representation(
   ruleDataFrame = "data.frame",
-  dataCount = "numeric"
+  dataCount = "numeric",
+  intervalReader = "intervalReader"
  ),
 
  prototype(
   ruleDataFrame = data.frame(),
-  dataCount = 0
+  dataCount = 0,
+  intervalReader = createIntervalReader()
  )
 )
 
@@ -47,3 +49,27 @@ setMethod(
 
     return(theObject)
   })
+
+
+setGeneric(
+  name = "explainInstances",
+  def = function (theObject, dataToExplain) {
+    standardGeneric("explainInstances")
+  }
+)
+
+#' @export
+setMethod(
+  f = "explainInstances",
+  signature = c("explanationObject", "data.frame"),
+  definition = function (theObject, dataToExplain) {
+
+
+    cbaFiringRules <- theObject@rules
+
+    expl <- getExplanationsDataframe(theObject, dataToExplain)
+
+    return(expl)
+  }
+)
+
