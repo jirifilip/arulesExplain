@@ -15,7 +15,6 @@
 #'
 #'
 #'
-#'
 setClass("intervalReader",
 
   representation(

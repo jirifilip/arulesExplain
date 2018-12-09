@@ -4,7 +4,7 @@
 \alias{getExplanationsDataframe}
 \title{Function for getting the explanation dataframe.}
 \usage{
-getExplanationsDataframe(rules, firingRulesID, allData,
+getExplanationsDataframe(rules, firingRulesID, originalData,
   includeJustifications = TRUE, intervalReader = new("intervalReader"))
 }
 \arguments{
@@ -12,13 +12,13 @@ getExplanationsDataframe(rules, firingRulesID, allData,
 
 \item{firingRulesID}{IDs of the rules that classified the instance}
 
-\item{allData}{instances that the user wants to get explained}
-
 \item{includeJustifications}{switch determining if rule justifications
 should also be included in the final dataframe}
 
 \item{intervalReader}{intervalReader that should be used for reading
 intervals in the rules}
+
+\item{allData}{instances that the user wants to get explained}
 }
 \value{
 explanation dataframe
