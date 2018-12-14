@@ -67,11 +67,11 @@ parseItem <- function (item, intervalReader) {
 #'
 #' @return string explaining rule quality.
 #'
-explainRuleStatistics <- function (explanationObject, index, consequentStringTrimmed) {
-  rules <- explanationObject@rules
+explainRuleStatistics <- function (expl, index, consequentStringTrimmed) {
+  rules <- expl@rules
 
   relSupport <- rules[index, 2]
-  absAupport <- floor(explanationObject@dataCount * relSupport)
+  absAupport <- floor(expl@dataCount * relSupport)
   confidence <-  rules[index, 3]
   incorrectlyPredicted <- floor((absAupport - absAupport * confidence) / confidence)
   numOfCoveredInstances <- floor(incorrectlyPredicted + absAupport)
@@ -102,15 +102,15 @@ explainRuleStatistics <- function (explanationObject, index, consequentStringTri
 #' @return dataframe containing explanations for rules
 #'
 #'
-explainQCBA <- function (explanationObject, rulesText, rules) {
-  defaultRuleList <- explanationObject@rules
-  intervalReader <- explanationObject@intervalReader
+explainQCBA <- function (expl, rulesText, rules) {
+  defaultRuleList <- expl@rules
+  intervalReader <- expl@intervalReader
 
   defaultRule <- defaultRuleList[nrow(defaultRuleList),]
   defaultRuleSupport <- defaultRule[, 2]
   defaultRuleConfidence <- defaultRule[, 3]
 
-  defaultRuleAbsSupport <- floor(defaultRuleSupport * explanationObject@dataCount)
+  defaultRuleAbsSupport <- floor(defaultRuleSupport * expl@dataCount)
   defaultRuleAbsConfidence <- floor(defaultRuleConfidence * defaultRuleAbsSupport)
 
 
@@ -149,7 +149,7 @@ explainQCBA <- function (explanationObject, rulesText, rules) {
       ruleText <- paste("IF", antecedentText, "THEN", consequentText)
 
       # calculate rules statistics to use in the natural language explanation
-      qualityText <- explainRuleStatistics(explanationObject, i, consequentStringTrimmed)
+      qualityText <- explainRuleStatistics(expl, i, consequentStringTrimmed)
 
     } else {
 
@@ -225,14 +225,14 @@ explainQCBA <- function (explanationObject, rulesText, rules) {
 #'
 #' @export
 #'
-getExplanationsDataframe <- function(explanationObject, originalData) {
-  firingRulesID <- explainPrediction.CBARuleModel(explanationObject@ruleModel, dataToExplain, discretize=TRUE)
-  firingRules <- explanationObject@rules[firingRulesID,]
+getExplanationsDataframe <- function(expl, originalData) {
+  firingRulesID <- explainPrediction.CBARuleModel(expl@ruleModel, dataToExplain, discretize=TRUE)
+  firingRules <- expl@rules[firingRulesID,]
 
   firingRulesText <- firingRules[,1]
 
 
-  explanationDataframe <- explainQCBA(explanationObject, firingRulesText, firingRules)
+  explanationDataframe <- explainQCBA(expl, firingRulesText, firingRules)
 
   explanationDataframe[["predicted class"]] <- sapply(explanationDataframe$explanation, function (x) {
     clazzSplit <- unlist(strsplit(x, " "))
@@ -248,7 +248,7 @@ getExplanationsDataframe <- function(explanationObject, originalData) {
 
   textVector <- c()
   for (i in firingRulesID) {
-    text <- getQCBAConflictingRuleText(explanationObject)
+    text <- getQCBAConflictingRuleText(expl)
 
     textVector <- c(textVector, text)
   }
@@ -365,8 +365,8 @@ getClassExplanationsDataframe <- function(rm, allData, intervalReader) {
 #'
 #' @return conflicting rule text
 #'
-getQCBAConflictingRuleText <- function(explanationObject, ruleIndex) {
-  rules <- explanationObject@rules
+getQCBAConflictingRuleText <- function(expl, ruleIndex) {
+  rules <- expl@rules
 
   if (ruleIndex == nrow(rules)) {
     return("No specific conflicting rule found.")
@@ -443,7 +443,7 @@ getQCBAConflictingRuleText <- function(explanationObject, ruleIndex) {
     "The weight of evidence of the conflicting rule is",
     supportNumberText, "%", supportWeightText,
     "compared to the selected rule",
-    paste("(", round(currentRuleSupport * explanationObject@dataCount), sep=""), "cases", "vs", round(conflictRuleSupport * explanationObject@dataCount), paste("cases", ").", sep="")#,
+    paste("(", round(currentRuleSupport * expl@dataCount), sep=""), "cases", "vs", round(conflictRuleSupport * expl@dataCount), paste("cases", ").", sep="")#,
     #"The conflicting rule captures",  supportConclusionText, "specific group of past cases."
   )
 

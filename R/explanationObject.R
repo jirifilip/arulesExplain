@@ -17,6 +17,20 @@ explanationObject <- setClass("explanationObject",
  )
 )
 
+setGeneric(
+  name = "printSomething",
+  def = function (theObject, something) {
+    standardGeneric("printSomething")
+  }
+)
+
+setMethod(
+  f = "printSomething",
+  signature = c(theObject = "explanationObject", something = "character"),
+  definition = function (theObject, something) {
+    print(string)
+  }
+)
 
 setGeneric(
   name = "initializeExplanation",
@@ -24,6 +38,7 @@ setGeneric(
     standardGeneric("initializeExplanation")
   }
 )
+
 
 #' @export
 #'
@@ -72,4 +87,7 @@ setMethod(
     return(expl)
   }
 )
+
+
+
 
