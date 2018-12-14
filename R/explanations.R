@@ -68,19 +68,25 @@ parseItem <- function (item, intervalReader) {
 #' @return string explaining rule quality.
 #'
 explainRuleStatistics <- function (expl, index, consequentStringTrimmed) {
-  rules <- expl@rules
+  rules <- expl@ruleDataFrame
+
+  print(index)
 
   relSupport <- rules[index, 2]
-  absAupport <- floor(expl@dataCount * relSupport)
+  #print(relSupport)
+  absSupport <- floor(expl@dataCount * relSupport)
+  #print(absSupport)
   confidence <-  rules[index, 3]
-  incorrectlyPredicted <- floor((absAupport - absAupport * confidence) / confidence)
-  numOfCoveredInstances <- floor(incorrectlyPredicted + absAupport)
+  #print(confidence)
+  incorrectlyPredicted <- floor((absSupport - absSupport * confidence) / confidence)
+  #print(incorrectlyPredicted)
+  numOfCoveredInstances <- floor(incorrectlyPredicted + absSupport)
 
   qualityText <- paste(
     "There were",
     numOfCoveredInstances,
     "instances which match the conditions of this rule in the training dataset. Out of these",
-    absAupport,
+    absSupport,
     "are predicted correctly as having",
     consequentStringTrimmed,
     "by this rule. The confidence of the rule is thus",
@@ -102,8 +108,8 @@ explainRuleStatistics <- function (expl, index, consequentStringTrimmed) {
 #' @return dataframe containing explanations for rules
 #'
 #'
-explainQCBA <- function (expl, rulesText, rules) {
-  defaultRuleList <- expl@rules
+explainQCBA <- function (expl, rulesText, rules, rulesID) {
+  defaultRuleList <- expl@ruleDataFrame
   intervalReader <- expl@intervalReader
 
   defaultRule <- defaultRuleList[nrow(defaultRuleList),]
@@ -149,7 +155,7 @@ explainQCBA <- function (expl, rulesText, rules) {
       ruleText <- paste("IF", antecedentText, "THEN", consequentText)
 
       # calculate rules statistics to use in the natural language explanation
-      qualityText <- explainRuleStatistics(expl, i, consequentStringTrimmed)
+      qualityText <- explainRuleStatistics(expl, rulesID[i], consequentStringTrimmed)
 
     } else {
 
@@ -209,9 +215,10 @@ explainQCBA <- function (expl, rulesText, rules) {
 #'   rmCBA <- cba(data, classAtt=colnames(data)[length(colnames(data))])
 #'
 #'   eo <- explanationObject()
+#'   eo@intervalReader <- createIntervalReader()
 #'   eo <- initializeExplanation(eo, rmCBA, data)
-#'   eo <- explainInstances(eo, rmCBA, dataSubset)
-#'
+#'   explanationDF <- explainInstances(eo, rmCBA, dataSubset)
+#'   View(explanationDF)
 #'
 #'   cbaFiringRuleIDs <- explainPrediction.CBARuleModel(rmCBA, data, discretize=TRUE)
 #'   cbaFiringRules <- as.qcba.rules(rmCBA@rules)
@@ -225,14 +232,14 @@ explainQCBA <- function (expl, rulesText, rules) {
 #'
 #' @export
 #'
-getExplanationsDataframe <- function(expl, originalData) {
-  firingRulesID <- explainPrediction.CBARuleModel(expl@ruleModel, dataToExplain, discretize=TRUE)
-  firingRules <- expl@rules[firingRulesID,]
+getExplanationsDataframe <- function(expl, dataToExplain, ruleModel) {
+  firingRulesID <- explainPrediction.CBARuleModel(ruleModel, dataToExplain, discretize=TRUE)
+  firingRules <- expl@ruleDataFrame[firingRulesID,]
 
   firingRulesText <- firingRules[,1]
 
 
-  explanationDataframe <- explainQCBA(expl, firingRulesText, firingRules)
+  explanationDataframe <- explainQCBA(expl, firingRulesText, firingRules, firingRulesID)
 
   explanationDataframe[["predicted class"]] <- sapply(explanationDataframe$explanation, function (x) {
     clazzSplit <- unlist(strsplit(x, " "))
@@ -248,7 +255,7 @@ getExplanationsDataframe <- function(expl, originalData) {
 
   textVector <- c()
   for (i in firingRulesID) {
-    text <- getQCBAConflictingRuleText(expl)
+    text <- getQCBAConflictingRuleText(expl, i)
 
     textVector <- c(textVector, text)
   }
@@ -366,7 +373,7 @@ getClassExplanationsDataframe <- function(rm, allData, intervalReader) {
 #' @return conflicting rule text
 #'
 getQCBAConflictingRuleText <- function(expl, ruleIndex) {
-  rules <- expl@rules
+  rules <- expl@ruleDataFrame
 
   if (ruleIndex == nrow(rules)) {
     return("No specific conflicting rule found.")

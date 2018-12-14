@@ -4,7 +4,7 @@
 \alias{getExplanationsDataframe}
 \title{Function for getting the explanation dataframe.}
 \usage{
-getExplanationsDataframe(expl, originalData)
+getExplanationsDataframe(expl, dataToExplain, ruleModel)
 }
 \arguments{
 \item{rules}{rules dataframe from the model}
@@ -34,9 +34,10 @@ Function for getting the explanation dataframe.
   rmCBA <- cba(data, classAtt=colnames(data)[length(colnames(data))])
 
   eo <- explanationObject()
-  eo <- initializeExplanation(eo, data)
-  eo <- explainInstances(eo, rmCBA, dataSubset)
-
+  eo@intervalReader <- createIntervalReader()
+  eo <- initializeExplanation(eo, rmCBA, data)
+  explanationDF <- explainInstances(eo, rmCBA, dataSubset)
+  View(explanationDF)
 
   cbaFiringRuleIDs <- explainPrediction.CBARuleModel(rmCBA, data, discretize=TRUE)
   cbaFiringRules <- as.qcba.rules(rmCBA@rules)

@@ -59,7 +59,7 @@ setMethod(
 
     cbaFiringRules <- theObject@ruleDataFrame
 
-    expl <- getExplanationsDataframe(theObject, dataToExplain)
+    expl <- getExplanationsDataframe(theObject, dataToExplain, ruleModel)
 
     return(expl)
   }

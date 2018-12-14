@@ -4,7 +4,7 @@
 \alias{explainQCBA}
 \title{Function for explaning QCBA.}
 \usage{
-explainQCBA(expl, rulesText, rules)
+explainQCBA(expl, rulesText, rules, rulesID)
 }
 \arguments{
 \item{rulesText}{Text of the rules.}
