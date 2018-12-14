@@ -1,6 +1,6 @@
 #' explanationObject
 #'
-#' @exportClass explanationObject
+#' @export explanationObject
 #'
 explanationObject <- setClass("explanationObject",
 
@@ -13,24 +13,12 @@ explanationObject <- setClass("explanationObject",
  prototype(
   ruleDataFrame = data.frame(),
   dataCount = 0,
-  intervalReader = createIntervalReader()
+  intervalReader = NULL
  )
 )
 
-setGeneric(
-  name = "printSomething",
-  def = function (theObject, something) {
-    standardGeneric("printSomething")
-  }
-)
 
-setMethod(
-  f = "printSomething",
-  signature = c(theObject = "explanationObject", something = "character"),
-  definition = function (theObject, something) {
-    print(string)
-  }
-)
+
 
 setGeneric(
   name = "initializeExplanation",
@@ -52,23 +40,12 @@ setMethod(
     return(theObject)
 })
 
-
+#'
 #' @export
 #'
-setMethod(
-  f = "initializeExplanation",
-  signature = c("explanationObject", "qCBARuleModel", "data.frame"),
-  definition = function (theObject, ruleModel, trainingData) {
-    theObject@dataCount <- nrow(trainingData)
-    theObject@ruleDataFrame <- ruleModel@rules
-
-    return(theObject)
-  })
-
-
 setGeneric(
   name = "explainInstances",
-  def = function (theObject, dataToExplain) {
+  def = function (theObject, ruleModel, dataToExplain) {
     standardGeneric("explainInstances")
   }
 )
@@ -76,11 +53,11 @@ setGeneric(
 #' @export
 setMethod(
   f = "explainInstances",
-  signature = c("explanationObject", "data.frame"),
-  definition = function (theObject, dataToExplain) {
+  signature = c("explanationObject", "CBARuleModel", "data.frame"),
+  definition = function (theObject, ruleModel, dataToExplain) {
 
 
-    cbaFiringRules <- theObject@rules
+    cbaFiringRules <- theObject@ruleDataFrame
 
     expl <- getExplanationsDataframe(theObject, dataToExplain)
 

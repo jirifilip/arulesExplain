@@ -210,7 +210,7 @@ explainQCBA <- function (expl, rulesText, rules) {
 #'
 #'   eo <- explanationObject()
 #'   eo <- initializeExplanation(eo, rmCBA, data)
-#'   eo <- explainInstances(eo, dataSubset)
+#'   eo <- explainInstances(eo, rmCBA, dataSubset)
 #'
 #'
 #'   cbaFiringRuleIDs <- explainPrediction.CBARuleModel(rmCBA, data, discretize=TRUE)
