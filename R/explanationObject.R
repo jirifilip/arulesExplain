@@ -7,7 +7,8 @@ explanationObject <- setClass("explanationObject",
  representation(
   ruleDataFrame = "data.frame",
   dataCount = "numeric",
-  intervalReader = "intervalReader"
+  intervalReader = "intervalReader",
+  ruleModel = "CBARuleModel"
  ),
 
  prototype(
@@ -36,6 +37,7 @@ setMethod(
   definition = function (theObject, ruleModel, trainingData) {
     theObject@dataCount <- nrow(trainingData)
     theObject@ruleDataFrame <- as.qcba.rules(ruleModel@rules)
+    theObject@intervalReader <- createIntervalReader()
 
     return(theObject)
 })
@@ -50,6 +52,8 @@ setGeneric(
   }
 )
 
+#'
+#'
 #' @export
 setMethod(
   f = "explainInstances",
@@ -66,5 +70,15 @@ setMethod(
 )
 
 
+#'
+#'
+#' @export
+#'
+setGeneric(
+  name = "explainRuleModel",
+  def = function(theObject) {
+    standardGeneric("explainRuleModel")
+  }
+)
 
 

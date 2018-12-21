@@ -34,7 +34,6 @@ Function for getting the explanation dataframe.
   rmCBA <- cba(data, classAtt=colnames(data)[length(colnames(data))])
 
   eo <- explanationObject()
-  eo@intervalReader <- createIntervalReader()
   eo <- initializeExplanation(eo, rmCBA, data)
   explanationDF <- explainInstances(eo, rmCBA, dataSubset)
   View(explanationDF)

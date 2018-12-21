@@ -32,14 +32,15 @@ parseItem <- function (item, intervalReader) {
   leftBound <- substr(leftString, intervalReader@bracketLen + 1, nchar(leftString))
   rightBound <- substr(rightString, 1, nchar(rightString) - intervalReader@bracketLen)
 
-  leftBracket <- substr(leftString, 1, intervalReader@bracketLen)
-  rightBracket <- substr(rightString, nchar(rightString) - intervalReader@bracketLen, nchar(rightString))
+  rightBracketStartIndex <- if (intervalReader@bracketLen == 1) 0 else intervalReader@bracketLen
 
+  leftBracket <- substr(leftString, 1, intervalReader@bracketLen)
+  rightBracket <- substr(rightString, nchar(rightString) - rightBracketStartIndex, nchar(rightString))
 
   result <- NULL
 
   leftBracketString <- if (leftBracket == intervalReader@leftClosedBracket) "or equal to " else ""
-  rightBracketString <- if (leftBracket == intervalReader@rightClosedBracket) "or equal to " else ""
+  rightBracketString <- if (rightBracket == intervalReader@rightClosedBracket) "or equal to " else ""
 
   leftBoundInc <- if (leftBracket == intervalReader@leftOpenBracket) " (excl)" else ""
   rightBoundInc <- if (rightBracket == intervalReader@rightOpenBracket) " (excl)" else ""
@@ -70,16 +71,10 @@ parseItem <- function (item, intervalReader) {
 explainRuleStatistics <- function (expl, index, consequentStringTrimmed) {
   rules <- expl@ruleDataFrame
 
-  print(index)
-
   relSupport <- rules[index, 2]
-  #print(relSupport)
   absSupport <- floor(expl@dataCount * relSupport)
-  #print(absSupport)
   confidence <-  rules[index, 3]
-  #print(confidence)
   incorrectlyPredicted <- floor((absSupport - absSupport * confidence) / confidence)
-  #print(incorrectlyPredicted)
   numOfCoveredInstances <- floor(incorrectlyPredicted + absSupport)
 
   qualityText <- paste(
@@ -215,7 +210,6 @@ explainQCBA <- function (expl, rulesText, rules, rulesID) {
 #'   rmCBA <- cba(data, classAtt=colnames(data)[length(colnames(data))])
 #'
 #'   eo <- explanationObject()
-#'   eo@intervalReader <- createIntervalReader()
 #'   eo <- initializeExplanation(eo, rmCBA, data)
 #'   explanationDF <- explainInstances(eo, rmCBA, dataSubset)
 #'   View(explanationDF)
@@ -421,8 +415,6 @@ getQCBAConflictingRuleText <- function(expl, ruleIndex) {
 
 
 
-  #print(supportRatio)
-  #print(confidenceRatio)
 
   #confidenceNumberText <- round((1 - confidenceRatio) * 100, 2)
   #supportNumberText <- round((1 - supportRatio) * 100, 2)

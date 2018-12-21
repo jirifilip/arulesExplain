@@ -1,7 +1,8 @@
-context("Getting explanations")
+context("Testing explanation object")
 
 library(qCBA)
 library(arc)
+
 
 test_that("text explanations are correct", {
   data <- iris
@@ -10,12 +11,12 @@ test_that("text explanations are correct", {
   dataSubset <- data[indexSubset,]
 
   rmCBA <- cba(data, classAtt=colnames(data)[length(colnames(data))])
-  cbaFiringRuleIDs <- explainPrediction.CBARuleModel(rmCBA, dataSubset, discretize=TRUE)
-  cbaFiringRules <- as.qcba.rules(rmCBA@rules)
-  explanation_dataframe <- getExplanationsDataframe(cbaFiringRules, cbaFiringRuleIDs, dataSubset,
-                                                  includeJustifications = TRUE, createIntervalReader())
 
-  for (i in 1:5) {
+  eo <- explanationObject()
+  eo <- initializeExplanation(eo, rmCBA, data)
+  explanation_dataframe <- explainInstances(eo, rmCBA, dataSubset)
+
+   for (i in 1:5) {
     expect_equal(
       "IF Petal.Length is lower than 2.45 THEN Species is setosa",
       explanation_dataframe$explanation[[i]])
@@ -56,10 +57,5 @@ test_that("text explanations are correct", {
 })
 
 
-test_that("justifications are correct", {
 
-  correct_justifications <- c(
 
-  )
-
-})
