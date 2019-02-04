@@ -1,4 +1,7 @@
-#' explanationObject
+#' @title explanationObject
+
+
+#' Explanation object
 #'
 #' @export explanationObject
 #'

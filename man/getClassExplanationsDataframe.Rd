@@ -4,12 +4,12 @@
 \alias{getClassExplanationsDataframe}
 \title{Function for getting the class explanation dataframe.}
 \usage{
-getClassExplanationsDataframe(rm, allData, intervalReader)
+getClassExplanationsDataframe(expl, allData)
 }
 \arguments{
-\item{rm}{rule model, either qcba or arc}
-
 \item{allData}{data on which the rule model was trained}
+
+\item{rm}{rule model, either qcba or arc}
 
 \item{intervalReader}{intervalReader that should be used for reading intervals in
 the rules}

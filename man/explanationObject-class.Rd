@@ -4,7 +4,9 @@
 \name{explanationObject-class}
 \alias{explanationObject-class}
 \alias{explanationObject}
-\title{explanationObject}
+\title{explanationObject
+Explanation object}
 \description{
 explanationObject
+Explanation object
 }

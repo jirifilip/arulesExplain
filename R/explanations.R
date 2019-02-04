@@ -154,6 +154,10 @@ explainQCBA <- function (expl, rulesText, rules, rulesID) {
 
     } else {
 
+      defaultRuleAbsSupport <- (explainPrediction.CBARuleModel(rmCBA, data) == length(eo@ruleModel@rules))
+      defaultRuleAbsSupport <- which(defaultRuleAbsSupport)
+      defaultRuleAbsSupport <- length(defaultRuleAbsSupport)
+
       default_rule <- consequentString
       default_rule_str <- paste(
         "Among instances not covered by any of the rules, the majority ",
