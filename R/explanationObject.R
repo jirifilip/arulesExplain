@@ -36,6 +36,7 @@ setMethod(
   signature = c("explanationObject", "CBARuleModel", "data.frame"),
   definition = function (theObject, ruleModel, trainingData) {
     theObject@dataCount <- nrow(trainingData)
+    theObject@ruleModel <- ruleModel
     theObject@ruleDataFrame <- as.qcba.rules(ruleModel@rules)
     theObject@intervalReader <- createIntervalReader()
 

@@ -16,9 +16,17 @@ test_that("text explanations are correct", {
   eo <- initializeExplanation(eo, rmCBA, data)
   explanation_dataframe <- explainInstances(eo, rmCBA, dataSubset)
 
-   for (i in 1:5) {
+  explanation_dataframe %>% View
+
+  classExpl <- getClassExplanationsDataframe(eo, data)
+
+  classExpl$versicolor %>% View
+
+  rmCBA@rules
+
+  for (i in 1:5) {
     expect_equal(
-      "IF Petal.Length is lower than 2.45 THEN Species is setosa",
+      "IF Petal.Length is lower than or equal to 2.45 THEN Species is setosa",
       explanation_dataframe$explanation[[i]])
   }
 

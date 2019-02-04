@@ -284,8 +284,9 @@ getExplanationsDataframe <- function(expl, dataToExplain, ruleModel) {
 #'
 #' @export
 #'
-getClassExplanationsDataframe <- function(rm, allData, intervalReader) {
-  rules <- rm@rules
+getClassExplanationsDataframe <- function(expl, allData) {
+  intervalReader <- expl@intervalReader
+  rules <- expl@ruleDataFrame
 
   if (class(rules) != "data.frame") {
     if (class(rules) != "rules") {
@@ -296,9 +297,30 @@ getClassExplanationsDataframe <- function(rm, allData, intervalReader) {
   }
 
 
-  explanationDataframe <- getExplanationsDataframe(rules, 1:(nrow(rules) - 1), allData, includeJustifications = TRUE, intervalReader)
+  firingRulesID <- 1:(nrow(rules) - 1)
+  firingRules <- expl@ruleDataFrame[firingRulesID,]
 
-  classAtt <- rm@classAtt
+  firingRulesText <- firingRules[,1]
+
+
+  explanationDataframe <- explainQCBA(expl, firingRulesText, firingRules, firingRulesID)
+
+  explanationDataframe[["predicted class"]] <- sapply(explanationDataframe$explanation, function (x) {
+    clazzSplit <- unlist(strsplit(x, " "))
+    clazz <- clazzSplit[length(clazzSplit)]
+
+
+    if (grepl("=", clazz)) {
+      clazz <- unlist(strsplit(x, "="))[2]
+    }
+
+    clazz
+  })
+
+
+
+
+  classAtt <- expl@ruleModel@classAtt
   classNames <- names(table(allData[classAtt]))
 
 
