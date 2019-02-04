@@ -10,6 +10,8 @@ test_that("text explanations are correct", {
   indexSubset <- seq(1, nrow(data), by = 10)
   dataSubset <- data[indexSubset,]
 
+  data[indexSubset]
+
   rmCBA <- cba(data, classAtt=colnames(data)[length(colnames(data))])
 
   eo <- explanationObject()
@@ -18,7 +20,7 @@ test_that("text explanations are correct", {
 
   explanation_dataframe %>% View
 
-  classExpl <- getClassExplanationsDataframe(eo, data)
+  classExpl <- explainRuleModel(eo, data)
 
   classExpl$versicolor %>% View
 
@@ -65,5 +67,59 @@ test_that("text explanations are correct", {
 })
 
 
+test_that("class explanations are correct", {
+  data <- iris
 
+  indexSubset <- seq(1, nrow(data), by = 10)
+  dataSubset <- data[indexSubset,]
+
+  rmCBA <- cba(data, classAtt=colnames(data)[length(colnames(data))])
+
+  eo <- explanationObject()
+  eo <- initializeExplanation(eo, rmCBA, data)
+
+  classExpl <- getClassExplanationsDataframe(eo, data)
+
+
+  expect_equal(
+    classExpl$setosa$priority,
+    1
+  )
+  expect_equal(
+    classExpl$setosa$`Explanation (Species=setosa)`,
+    "IF Petal.Length is lower than or equal to 2.45"
+  )
+  expect_equal(
+    classExpl$setosa$justification,
+    "There were 50 instances which match the conditions of this rule in the training dataset. Out of these 50 are predicted correctly as having Species=setosa by this rule. The confidence of the rule is thus 100 %."
+  )
+
+
+
+  expect_equal(
+    classExpl$virginica[1,]$priority,
+    2
+  )
+  expect_equal(
+    classExpl$virginica[1,]$`Explanation (Species=virginica)`,
+    "IF Sepal.Length is greater than 6.15 (excl) and Petal.Width is greater than 1.75 (excl)"
+  )
+  expect_equal(
+    classExpl$virginica[1,]$justification,
+    "There were 37 instances which match the conditions of this rule in the training dataset. Out of these 37 are predicted correctly as having Species=virginica by this rule. The confidence of the rule is thus 100 %."
+  )
+
+  expect_equal(
+    classExpl$versicolor[3,]$priority,
+    6
+  )
+  expect_equal(
+    classExpl$versicolor[3,]$`Explanation (Species=versicolor)`,
+    "IF Sepal.Width is between 2.95 (excl) to 3.35 and Petal.Length is between 2.45 (excl) to 4.75"
+  )
+  expect_equal(
+    classExpl$versicolor[3,]$justification,
+    "There were 12 instances which match the conditions of this rule in the training dataset. Out of these 12 are predicted correctly as having Species=versicolor by this rule. The confidence of the rule is thus 100 %."
+  )
+})
 

@@ -77,9 +77,23 @@ setMethod(
 #'
 setGeneric(
   name = "explainRuleModel",
-  def = function(theObject) {
+  def = function(theObject, data) {
     standardGeneric("explainRuleModel")
   }
 )
 
+
+#'
+#'
+#' @export
+setMethod(
+  f = "explainRuleModel",
+  signature = c("explanationObject", "data.frame"),
+  definition = function (theObject, data) {
+
+    expl <- getClassExplanationsDataframe(theObject, data)
+
+    return(expl)
+  }
+)
 

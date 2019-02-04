@@ -305,7 +305,7 @@ getClassExplanationsDataframe <- function(expl, allData) {
 
   explanationDataframe <- explainQCBA(expl, firingRulesText, firingRules, firingRulesID)
 
-  explanationDataframe[["predicted class"]] <- sapply(explanationDataframe$explanation, function (x) {
+  explanationDataframe[["Predicted class"]] <- sapply(explanationDataframe$explanation, function (x) {
     clazzSplit <- unlist(strsplit(x, " "))
     clazz <- clazzSplit[length(clazzSplit)]
 
@@ -316,7 +316,6 @@ getClassExplanationsDataframe <- function(expl, allData) {
 
     clazz
   })
-
 
 
 
@@ -344,6 +343,7 @@ getClassExplanationsDataframe <- function(expl, allData) {
 
     class_val
   })
+  class_explanation_df$explanation <- NULL
 
   class_explanation_df["Confidence"] <- classExplRules[,3]
   class_explanation_df["Support (rel)"] <- classExplRules[,2]
@@ -359,12 +359,13 @@ getClassExplanationsDataframe <- function(expl, allData) {
     lift
   })
 
-  class_explanation_df <- class_explanation_df[,c(3, 1, 6, 7, 8, 9, 5)]
+  class_explanation_df <- class_explanation_df[,c(3, 4, 1, 2, 6, 7, 8, 9)]
+
 
   resultList <- list()
 
   for (className in classNames) {
-    mask <- class_explanation_df$class_val == className
+    mask <- class_explanation_df["Predicted class"] == className
 
     maskExplanations <- class_explanation_df[mask,]
 
