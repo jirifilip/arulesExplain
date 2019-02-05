@@ -2,6 +2,7 @@ context("Testing explanation object")
 
 library(qCBA)
 library(arc)
+library(qCBA)
 
 
 test_that("text explanations are correct (arc)", {
@@ -14,7 +15,7 @@ test_that("text explanations are correct (arc)", {
 
   eo <- explanationObject()
   eo <- initializeExplanation(eo, rmCBA, data)
-  explanation_dataframe <- explainInstances(eo, rmCBA, dataSubset)
+  explanation_dataframe <- explainInstances(eo, dataSubset)
 
   explanation_dataframe %>% View
 
@@ -67,14 +68,18 @@ test_that("text explanations are correct (qcba)", {
   indexSubset <- seq(1, nrow(data), by = 10)
   dataSubset <- data[indexSubset,]
 
-  rmCBA <- cba(data, classAtt=colnames(data)[length(colnames(data))])
+  rmCBA <- cba(data, classAtt = colnames(data)[length(colnames(data))])
+  rmqCBA <- qcba(rmCBA, datadf = dataSubset)
 
   eo <- explanationObject()
-  eo <- initializeExplanation(eo, rmCBA, data)
-  explanation_dataframe <- explainInstances(eo, rmCBA, dataSubset)
+  eo <- initializeExplanation(eo, rmCBA, data, rmqCBA)
+
+
+  eo@ruleModel@rules %>% inspect
+  explanation_dataframe <- explainInstances(eo, dataSubset)
 
   explanation_dataframe %>% View
-
+  rmqCBA@rules %>% View
 
   for (i in 1:5) {
     expect_equal(

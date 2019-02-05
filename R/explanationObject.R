@@ -1,6 +1,22 @@
 #' @title explanationObject
 
 
+
+testObject <- setClass("TestObj")
+
+setGeneric("testMethod", def = function (theObject, a, b) {
+  standardGeneric("testMethod")
+})
+
+setMethod("testMethod", c("testObject", "numeric"), function (theObject, a) {
+  a
+})
+
+setMethod("testMethod", c("testObject", "numeric", "numeric"), function (theObject, a, b) {
+  b
+})
+
+
 #' Explanation object
 #'
 #' @export explanationObject
@@ -22,18 +38,36 @@ explanationObject <- setClass("explanationObject",
 )
 
 
-
-
+#' @export
+#'
 setGeneric(
   name = "initializeExplanation",
-  def = function (theObject, ruleModel, trainingData) {
+  def = function (theObject, ruleModel, trainingData, ruleModelQCBA) {
     standardGeneric("initializeExplanation")
   }
 )
 
 
-#' @export
-#'
+setMethod(
+  f = "initializeExplanation",
+  signature = c("explanationObject", "CBARuleModel", "data.frame", "qCBARuleModel"),
+  definition = function (theObject, ruleModel, trainingData, ruleModelQCBA) {
+
+    theObject@dataCount <- nrow(trainingData)
+    theObject@ruleModel <- CBARuleModel()
+    theObject@ruleModel@rules <- as.item.matrix(ruleModelQCBA, trainingData)
+    theObject@ruleModel@classAtt <- ruleModelQCBA@classAtt
+    theObject@ruleModel@cutp <- ruleModel@cutp
+
+    theObject@ruleDataFrame <- as.qcba.rules(theObject@ruleModel@rules)
+    theObject@intervalReader <- createIntervalReader()
+
+
+
+    return(theObject)
+  })
+
+
 setMethod(
   f = "initializeExplanation",
   signature = c("explanationObject", "CBARuleModel", "data.frame"),
@@ -46,32 +80,35 @@ setMethod(
     return(theObject)
 })
 
-#'
+
+
+
+
 #' @export
 #'
 setGeneric(
   name = "explainInstances",
-  def = function (theObject, ruleModel, dataToExplain) {
+  def = function (theObject, dataToExplain) {
     standardGeneric("explainInstances")
   }
 )
 
-#'
-#'
-#' @export
+
 setMethod(
   f = "explainInstances",
-  signature = c("explanationObject", "CBARuleModel", "data.frame"),
-  definition = function (theObject, ruleModel, dataToExplain) {
+  signature = c("explanationObject", "data.frame"),
+  definition = function (theObject, dataToExplain) {
 
 
     cbaFiringRules <- theObject@ruleDataFrame
 
-    expl <- getExplanationsDataframe(theObject, dataToExplain, ruleModel)
+    expl <- getExplanationsDataframe(theObject, dataToExplain, theObject@ruleModel)
 
     return(expl)
   }
 )
+
+
 
 
 #'
