@@ -36,13 +36,20 @@ itemMatrixRules2 <- as.item.matrix(rmqCBA, train)
 
 ### Rules explanation
 ```R
-cbaFiringRuleIDs <- explainPrediction.CBARuleModel(rmCBA, train)
-cbaFiringRules <- as.qcba.rules(rmCBA@rules)[cbaFiringRuleIDs,]
+library(arc)
 
-# explanation demo
-firingRuleIDs <- predict(rmqCBA,train,outputFiringRuleIDs=TRUE)
-firingRules <- rmqCBA@rules[firingRuleIDs,]
+data <- iris
+dataSubset <- iris[sample(1:nrow(data), 15),]
 
-cba_explanation_dataframe <- getExplanationsDataframe(as.qcba.rules(rmCBA@rules), cbaFiringRuleIDs, train, includeJustifications = TRUE, createIntervalReader())
-View(cba_explanation_dataframe)
+rmCBA <- cba(data, classAtt=colnames(data)[length(colnames(data))])
+
+eo <- explanationObject()
+eo <- initializeExplanation(eo, rmCBA, data)
+explanationDF <- explainInstances(eo, dataSubset)
+View(explanationDF)
+
+classExplanationDF <- explainRuleModel(eo, data)
+View(classExplanationDF$virginica)
+View(classExplanationDF$versicolor)
+View(classExplanationDF$setosa)
 ```

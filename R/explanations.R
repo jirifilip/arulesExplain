@@ -215,16 +215,12 @@ explainQCBA <- function (expl, rulesText, rules, rulesID) {
 #'
 #'   eo <- explanationObject()
 #'   eo <- initializeExplanation(eo, rmCBA, data)
-#'   explanationDF <- explainInstances(eo, rmCBA, dataSubset)
+#'   explanationDF <- explainInstances(eo, dataSubset)
 #'   View(explanationDF)
 #'
-#'   cbaFiringRuleIDs <- explainPrediction.CBARuleModel(rmCBA, data, discretize=TRUE)
-#'   cbaFiringRules <- as.qcba.rules(rmCBA@rules)
 #'
-#'
-#'
-#'   explanation_dataframe <- getExplanationsDataframe(cbaFiringRules, cbaFiringRuleIDs, data,
-#'       includeJustifications = TRUE, createIntervalReader())
+#'   explanation_dataframe <- explainRuleModel(eo, data)
+#'   View(explanationDF$virginica)
 #'
 #'
 #'

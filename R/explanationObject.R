@@ -1,22 +1,4 @@
-#' @title explanationObject
-
-
-
-testObject <- setClass("TestObj")
-
-setGeneric("testMethod", def = function (theObject, a, b) {
-  standardGeneric("testMethod")
-})
-
-setMethod("testMethod", c("testObject", "numeric"), function (theObject, a) {
-  a
-})
-
-setMethod("testMethod", c("testObject", "numeric", "numeric"), function (theObject, a, b) {
-  b
-})
-
-
+#' @title
 #' Explanation object
 #'
 #' @export explanationObject
