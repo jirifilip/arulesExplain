@@ -61,10 +61,9 @@ parseItem <- function (item, intervalReader) {
 
 #' Calculate rules statistics to use in the natural language explanation.
 #'
-#' @param index Index of the rule we want to calculate statistics for.
-#' @param allRules Dataframe containing all of the rules.
+#' @param expl an explanation object
+#' @param index Index of the rule we want to calculate statistics for
 #' @param consequentStringTrimmed Consequent string trimmed of the surrounding curly brackets.
-#' @param data Data to be used to calculate rule statistics.
 #'
 #' @return string explaining rule quality.
 #'
@@ -94,11 +93,10 @@ explainRuleStatistics <- function (expl, index, consequentStringTrimmed) {
 
 #' Function for explaning QCBA.
 #'
+#' @param expl an explanation object
 #' @param rulesText Text of the rules.
 #' @param rules Rule dataframe.
-#' @param allData Data from which the rules were mined.
-#' @param defaultRuleList default rules dataframe from qcba model.
-#' @param intervalReader an intervalReader object used for reading intervals in rules
+#' @param rulesID IDs of the rules that classified an instance
 #'
 #' @return dataframe containing explanations for rules
 #'
@@ -154,9 +152,11 @@ explainQCBA <- function (expl, rulesText, rules, rulesID) {
 
     } else {
 
-      defaultRuleAbsSupport <- (explainPrediction.CBARuleModel(rmCBA, data) == length(eo@ruleModel@rules))
-      defaultRuleAbsSupport <- which(defaultRuleAbsSupport)
-      defaultRuleAbsSupport <- length(defaultRuleAbsSupport)
+
+      #defaultRuleAbsSupport <- (explainPrediction.CBARuleModel(rmCBA, data) == length(expl@ruleModel@rules))
+      #defaultRuleAbsSupport <- which(defaultRuleAbsSupport)
+      #defaultRuleAbsSupport <- length(defaultRuleAbsSupport)
+      defaultRuleAbsSupport <- 0
 
       default_rule <- consequentString
       default_rule_str <- paste(
@@ -193,39 +193,13 @@ explainQCBA <- function (expl, rulesText, rules, rulesID) {
 
 #' Function for getting the explanation dataframe.
 #'
-#' @param rules rules dataframe from the model
-#' @param firingRulesID IDs of the rules that classified the instance
-#' @param allData instances that the user wants to get explained
-#' @param includeJustifications switch determining if rule justifications
-#'     should also be included in the final dataframe
-#' @param intervalReader intervalReader that should be used for reading
-#'     intervals in the rules
-#'
+#' @param expl an explanation object
+#' @param dataToExplain data to be explained row by row
+#' @param ruleModel model to use to explain
 #'
 #' @return explanation dataframe
 #'
-#'
-#' @examples
-#'   library(arc)
-#'
-#'   data <- iris
-#'   dataSubset <- iris[sample(1:nrow(data), 15),]
-#'
-#'   rmCBA <- cba(data, classAtt=colnames(data)[length(colnames(data))])
-#'
-#'   eo <- explanationObject()
-#'   eo <- initializeExplanation(eo, rmCBA, data)
-#'   explanationDF <- explainInstances(eo, dataSubset)
-#'   View(explanationDF)
-#'
-#'
-#'   explanation_dataframe <- explainRuleModel(eo, data)
-#'   View(explanationDF$virginica)
-#'
-#'
-#'
 #' @export
-#'
 getExplanationsDataframe <- function(expl, dataToExplain, ruleModel) {
   firingRulesID <- explainPrediction.CBARuleModel(ruleModel, dataToExplain, discretize=TRUE)
   firingRules <- expl@ruleDataFrame[firingRulesID,]
@@ -260,30 +234,14 @@ getExplanationsDataframe <- function(expl, dataToExplain, ruleModel) {
 
 #' Function for getting the class explanation dataframe.
 #'
-#' @param rm rule model, either qcba or arc
+#' @param expl an explanation object
 #' @param allData data on which the rule model was trained
-#' @param intervalReader intervalReader that should be used for reading intervals in
-#'     the rules
 #'
 #'
 #' @return list (where classes are keys) of class explanation dataframes
 #'
 #'
-#' @examples
-#'   library(arc)
-#'
-#'   train <- iris
-#'
-#'   rmCBA <- cba(train, classAtt=colnames(train)[length(colnames(train))])
-#'
-#'   cbaFiringRuleIDs <- explainPrediction.CBARuleModel(rmCBA, train)
-#'   cbaFiringRules <- as.qcba.rules(rmCBA@rules)
-#'
-#'   explanation_dataframe <- getClassExplanationsDataframe(rmCBA, train, createIntervalReader())
-#'
-#'
 #' @export
-#'
 getClassExplanationsDataframe <- function(expl, allData) {
   intervalReader <- expl@intervalReader
   rules <- expl@ruleDataFrame
@@ -383,12 +341,10 @@ getClassExplanationsDataframe <- function(expl, allData) {
 #' Function for getting information about the next best rule which has different
 #' class from the current rule.
 #'
-#' @param rules dataframe containing rules information
+#' @param expl an explanation object
 #' @param ruleIndex index of the rule we want to get conflicting text for
-#' @param data data on which the model was trained
 #'
 #' @return conflicting rule text
-#'
 getQCBAConflictingRuleText <- function(expl, ruleIndex) {
   rules <- expl@ruleDataFrame
 
@@ -498,17 +454,7 @@ getQCBAConflictingRuleText <- function(expl, ruleIndex) {
 #'
 #' @return vector of rule IDs
 #'
-#' @examples
-#'   library(arc)
-#'
-#'   data <- iris
-#'
-#'   rmCBA <- cba(data, classAtt=colnames(data)[length(colnames(data))])
-#'
-#'   cbaFiringRuleIDs <- explainPrediction.CBARuleModel(rmCBA, data, discretize=TRUE)
-#'
 #' @export
-#'
 explainPrediction.CBARuleModel  <- function (object, data, discretize = TRUE, ...) {
   if (discretize && length(object@cutp)>0) {
     data <- applyCuts(data, object@cutp, infinite_bounds=TRUE, labels=TRUE)

@@ -21,13 +21,3 @@ vector of rule IDs
 \description{
 Function for investigating which rule classified an instance.
 }
-\examples{
-  library(arc)
-
-  data <- iris
-
-  rmCBA <- cba(data, classAtt=colnames(data)[length(colnames(data))])
-
-  cbaFiringRuleIDs <- explainPrediction.CBARuleModel(rmCBA, data, discretize=TRUE)
-
-}

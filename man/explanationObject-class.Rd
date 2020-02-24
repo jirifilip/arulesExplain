@@ -8,3 +8,15 @@
 \description{
 Explanation object
 }
+\section{Slots}{
+
+\describe{
+\item{\code{ruleDataFrame}}{data frame of mined rules}
+
+\item{\code{dataCount}}{number of training data}
+
+\item{\code{intervalReader}}{an intervalReader object}
+
+\item{\code{ruleModel}}{a cba rule model}
+}}
+

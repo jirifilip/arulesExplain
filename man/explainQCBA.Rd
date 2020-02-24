@@ -7,15 +7,13 @@
 explainQCBA(expl, rulesText, rules, rulesID)
 }
 \arguments{
+\item{expl}{an explanation object}
+
 \item{rulesText}{Text of the rules.}
 
 \item{rules}{Rule dataframe.}
 
-\item{allData}{Data from which the rules were mined.}
-
-\item{defaultRuleList}{default rules dataframe from qcba model.}
-
-\item{intervalReader}{an intervalReader object used for reading intervals in rules}
+\item{rulesID}{IDs of the rules that classified an instance}
 }
 \value{
 dataframe containing explanations for rules

@@ -1,8 +1,10 @@
-#' @title
-#' Explanation object
-#'
+#' @title Explanation object
 #' @export explanationObject
-#'
+#' @slot ruleDataFrame data frame of mined rules
+#' @slot dataCount number of training data
+#' @slot intervalReader an intervalReader object
+#' @slot ruleModel a cba rule model
+#' @include intervalReader.R
 explanationObject <- setClass("explanationObject",
 
  representation(
@@ -16,12 +18,20 @@ explanationObject <- setClass("explanationObject",
   ruleDataFrame = data.frame(),
   dataCount = 0,
   intervalReader = NULL
- )
+ ),
+
+ contains = "intervalReader"
 )
 
 
-#' @export
+#' Generic method for initializing explanations
 #'
+#' @param theObject an explanation objectg
+#' @param ruleModel a rule model of CBA
+#' @param trainingData training data of the model
+#' @param ruleModelQCBA a rule model of QCBA
+#'
+#' @export
 setGeneric(
   name = "initializeExplanation",
   def = function (theObject, ruleModel, trainingData, ruleModelQCBA) {
@@ -29,7 +39,15 @@ setGeneric(
   }
 )
 
-
+#' Method for initializing explanations when the model is trainined by qcba
+#'
+#' @param theObject an explanation objectg
+#' @param ruleModel a rule model of CBA
+#' @param trainingData training data of the model
+#' @param ruleModelQCBA a rule model of QCBA
+#'
+#' @rdname initializeExplanationQCBA
+#' @export
 setMethod(
   f = "initializeExplanation",
   signature = c("explanationObject", "CBARuleModel", "data.frame", "qCBARuleModel"),
@@ -50,6 +68,12 @@ setMethod(
   })
 
 
+#' Method for initializing explanations when the model is
+#'  trained by cba
+#'
+#'
+#' @rdname initializeExplanation
+#' @export
 setMethod(
   f = "initializeExplanation",
   signature = c("explanationObject", "CBARuleModel", "data.frame"),
@@ -66,8 +90,12 @@ setMethod(
 
 
 
-#' @export
+#' A generic method for explaining instances
 #'
+#' @param theObject an explanation object
+#' @param dataToExplain data to be explained
+#'
+#' @export
 setGeneric(
   name = "explainInstances",
   def = function (theObject, dataToExplain) {
@@ -75,7 +103,12 @@ setGeneric(
   }
 )
 
-
+#' A method for exlaining instances
+#'
+#' @param theObject an explanation object
+#' @param dataToExplain data to be explained
+#'
+#' @export
 setMethod(
   f = "explainInstances",
   signature = c("explanationObject", "data.frame"),
@@ -93,10 +126,12 @@ setMethod(
 
 
 
+#' Generic method for explaining a rule model
 #'
+#' @param theObject an explanation objectg
+#' @param data data to be explained
 #'
 #' @export
-#'
 setGeneric(
   name = "explainRuleModel",
   def = function(theObject, data) {
@@ -105,7 +140,10 @@ setGeneric(
 )
 
 
+#' Method for explaining a rule model
 #'
+#' @param theObject an explanation objectg
+#' @param data data to be explained
 #'
 #' @export
 setMethod(

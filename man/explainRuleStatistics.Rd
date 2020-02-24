@@ -7,13 +7,11 @@
 explainRuleStatistics(expl, index, consequentStringTrimmed)
 }
 \arguments{
-\item{index}{Index of the rule we want to calculate statistics for.}
+\item{expl}{an explanation object}
+
+\item{index}{Index of the rule we want to calculate statistics for}
 
 \item{consequentStringTrimmed}{Consequent string trimmed of the surrounding curly brackets.}
-
-\item{allRules}{Dataframe containing all of the rules.}
-
-\item{data}{Data to be used to calculate rule statistics.}
 }
 \value{
 string explaining rule quality.

@@ -7,45 +7,15 @@
 getExplanationsDataframe(expl, dataToExplain, ruleModel)
 }
 \arguments{
-\item{rules}{rules dataframe from the model}
+\item{expl}{an explanation object}
 
-\item{firingRulesID}{IDs of the rules that classified the instance}
+\item{dataToExplain}{data to be explained row by row}
 
-\item{allData}{instances that the user wants to get explained}
-
-\item{includeJustifications}{switch determining if rule justifications
-should also be included in the final dataframe}
-
-\item{intervalReader}{intervalReader that should be used for reading
-intervals in the rules}
+\item{ruleModel}{model to use to explain}
 }
 \value{
 explanation dataframe
 }
 \description{
 Function for getting the explanation dataframe.
-}
-\examples{
-  library(arc)
-
-  data <- iris
-  dataSubset <- iris[sample(1:nrow(data), 15),]
-
-  rmCBA <- cba(data, classAtt=colnames(data)[length(colnames(data))])
-
-  eo <- explanationObject()
-  eo <- initializeExplanation(eo, rmCBA, data)
-  explanationDF <- explainInstances(eo, rmCBA, dataSubset)
-  View(explanationDF)
-
-  cbaFiringRuleIDs <- explainPrediction.CBARuleModel(rmCBA, data, discretize=TRUE)
-  cbaFiringRules <- as.qcba.rules(rmCBA@rules)
-
-
-
-  explanation_dataframe <- getExplanationsDataframe(cbaFiringRules, cbaFiringRuleIDs, data,
-      includeJustifications = TRUE, createIntervalReader())
-
-
-
 }

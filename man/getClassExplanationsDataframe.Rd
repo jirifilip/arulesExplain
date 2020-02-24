@@ -7,30 +7,13 @@
 getClassExplanationsDataframe(expl, allData)
 }
 \arguments{
+\item{expl}{an explanation object}
+
 \item{allData}{data on which the rule model was trained}
-
-\item{rm}{rule model, either qcba or arc}
-
-\item{intervalReader}{intervalReader that should be used for reading intervals in
-the rules}
 }
 \value{
 list (where classes are keys) of class explanation dataframes
 }
 \description{
 Function for getting the class explanation dataframe.
-}
-\examples{
-  library(arc)
-
-  train <- iris
-
-  rmCBA <- cba(train, classAtt=colnames(train)[length(colnames(train))])
-
-  cbaFiringRuleIDs <- explainPrediction.CBARuleModel(rmCBA, train)
-  cbaFiringRules <- as.qcba.rules(rmCBA@rules)
-
-  explanation_dataframe <- getClassExplanationsDataframe(rmCBA, train, createIntervalReader())
-
-
 }

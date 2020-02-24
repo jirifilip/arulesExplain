@@ -8,11 +8,9 @@ class from the current rule.}
 getQCBAConflictingRuleText(expl, ruleIndex)
 }
 \arguments{
+\item{expl}{an explanation object}
+
 \item{ruleIndex}{index of the rule we want to get conflicting text for}
-
-\item{rules}{dataframe containing rules information}
-
-\item{data}{data on which the model was trained}
 }
 \value{
 conflicting rule text
